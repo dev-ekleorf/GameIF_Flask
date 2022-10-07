@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+<script src="{{ asset('js/bootstrap-datepicker.min.js')}}"></script>
+
+{% block title %}
+Lista de Filmes
+{% endblock %}
+
+{% block content %}
+
+      
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+        <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+    <h2>Editar Filme: </h2>
+    <form class="row g-3" action="/filmes/editarFilme/{{filmeRecuperado.id}}" method="post" name="formularioEditarFilme" enctype=multipart/form-data>
+  
+        <input type="hidden" name="id" value = "{{filmeRecuperado.id}}" class="form-control" id="id">
+        
+        <div class="col-md-12">
+            <label for="titulo" class="form-label">Titulo
+                <span class="text-danger font-weight-bold">*</span>
+            </label>
+            <input type="text" name="titulo" value = "{{filmeRecuperado.titulo}}" class="form-control" id="titulo" required>
+        </div>
+        <div class="col-md-12">
+            <label for="genero" class="form-label">Genero
+                <span class="text-danger font-weight-bold">*</span>
+            </label>
+            <input type="text" name="genero" value = "{{filmeRecuperado.genero}}" class="form-control" id="genero" required>
+        </div>
+        <div class="col-md-12">
+            <label for="sinopse">Sinopse</label>
+            <textarea class="form-control" name="sinopse" placeholder="Sinopse" id="sinopse">{{filmeRecuperado.sinopse}}</textarea>
+        </div>
+
+        <div class="col-md-6">
+            <label for="datainicio" class="form-label">Data Exibicao Inicio
+                <span class="text-danger font-weight-bold">*</span>
+            </label>
+            <input type="date" value = "{{filmeRecuperado.getDataInicio()}}" class="form-control" name="datainicio" id="datainicio"
+                required>
+            <div id="invalid-periodo_exibicao_inicio" class="invalid-feedback"> </div>
+        </div>
+
+
+        <div class="col-md-6">
+            <label for="datafim" class="form-label">Data Exibicao Fim
+                <span class="text-danger font-weight-bold">*</span>
+            </label>
+            <input type="date" value = "{{filmeRecuperado.getDataFim()}}" class="form-control" name="datafim" id="datainicio" required>
+            <div id="invalid-periodo_exibicao_fim" class="invalid-feedback"> </div>
+        </div>
+
+        <div class="col-md-12">
+            <label for="file" class="form-label">Cartaz</label>
+            <figure>
+                <img src="{{url_for('cartazes',nome_arquivo=filmeRecuperado.cartaz)}}" class="img-thumbnail"
+                style="max-width: 80px; max-width: 80px;" alt="...">
+                <figcaption>
+                  <label>
+                     <input type="file" name="cartaz" id="cartaz" value="{{filmeRecuperado.cartaz}}" accept=".jpg">
+                  </label>
+                </figcaption>
+            </figure>
+        </div>
+
+        <button type="submit" class="btn btn-primary my-5" onclick=""
+            name="Adicionar">Atualizar</button>
+    </form>
+
+{% endblock %}
+

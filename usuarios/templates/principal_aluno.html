@@ -1,0 +1,68 @@
+{% extends "base_aluno.html" %}
+<script src="{{ asset('js/bootstrap-datepicker.min.js')}}"></script>
+{% block title %}
+Principal
+{% endblock %}
+
+{% block content %}
+
+      
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+        <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+   
+    <h2>Minhas Salas</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Logo</th>
+                <th scope="col">Sala</th>
+                <th scope="col">Atividades Pendentes</th>
+                <th scope="col">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sala in arraySalas %}
+    
+            <tr>
+                <th scope="row">{{ sala.getId() }}</th>
+    
+                <td>
+                   
+                    <img src="{{url_for('logos',nome_arquivo=sala.getLogo())}}" class="img-thumbnail"
+                        style="max-width: 80px; max-width: 80px;" alt="...">
+                    
+                </td>
+                <td>{{sala.getNome()}}</td>
+                <td>{{sala.andamento}}</td>
+                <td>
+                    <a class="btn btn-danger" href="/salas/desfazerCadastro/{{sala.id}}">Excluir</a>
+                </td>
+
+            </tr>
+            
+            {% endfor %}
+        </tbody>
+        
+    </table>
+ 
+    <div class="row mx-5 my-5">
+        <div class="col">
+        </div>
+        <div class="col-auto">
+          <a class="btn btn-primary pull-right" href="/salas/procurarSalas">Procurar Outras Salas</a>
+        </div>
+      </div>
+
+      
+
+{% endblock %}
+
