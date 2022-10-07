@@ -2,8 +2,10 @@ from flask import *
 from flask import blueprints
 from DAO.UsuarioDAO import UsuarioDAO
 from usuarios import usuarios
+from salas import salas
 
 app = Flask(__name__)
+app.secret_key=b'gifkey#635jk8927'
 
 import firebase_admin
 from firebase_admin import credentials, firestore, initialize_app
@@ -13,6 +15,7 @@ firebase_admin.initialize_app(cred)
 db = firestore.client() 
 
 app.register_blueprint(usuarios,url_prefix='/usuarios')
+app.register_blueprint(salas,url_prefix='/salas')
 
 
 @app.route("/")

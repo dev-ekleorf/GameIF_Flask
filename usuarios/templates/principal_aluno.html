@@ -33,18 +33,19 @@ Principal
             {% for sala in arraySalas %}
     
             <tr>
-                <th scope="row">{{ sala.getId() }}</th>
+                <th scope="row" onclick="alert('teste')">{{ sala.getId() }}</th>
     
                 <td>
                    
                     <img src="{{url_for('logos',nome_arquivo=sala.getLogo())}}" class="img-thumbnail"
-                        style="max-width: 80px; max-width: 80px;" alt="...">
+                        style="max-width: 80px; max-width: 80px;" alt="Logo da sala." onclick="alert('teste')">
                     
                 </td>
-                <td>{{sala.getNome()}}</td>
+                <td><a href="{{ url_for('salas.carregar_sala',id = sala.getId()) }}">{{sala.getNome()}}</a></td>
                 <td>{{sala.andamento}}</td>
+                </div>
                 <td>
-                    <a class="btn btn-danger" href="/salas/desfazerCadastro/{{sala.id}}">Excluir</a>
+                    <a class="btn btn-danger" href="/salas/desfazerCadastro/{{sala.id}}">Sair da Sala</a>
                 </td>
 
             </tr>

@@ -4,8 +4,6 @@ from flask import render_template,redirect, url_for, request, session,send_from_
 
 from Model.Sala import Sala
 
-
-
 usuarios = Blueprint('usuarios', __name__,
                         template_folder='templates', static_folder='static')
 
@@ -20,12 +18,14 @@ def login():
     print("Login: "+login)
 
     if(login == "Raquel"):
+        session['usuarioLogado'] = 1
         return render_template("principal_professor.html")
     elif(login == "Erik"):
         sala = Sala(1,"teste","19112021013321_51yHBMzxszL._AC_SY445_.jpg","","")
         arraySalas = []
         arraySalas.append(sala)
         print(sala.getNome())
+        session['usuarioLogado'] = 2
         return render_template("principal_aluno.html",arraySalas = arraySalas)
     else:
         return redirect("/")
