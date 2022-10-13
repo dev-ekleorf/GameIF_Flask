@@ -1,76 +1,65 @@
-{% extends "base.html" %}
+{% extends "base_aluno.html" %}
 <script src="{{ asset('js/bootstrap-datepicker.min.js')}}"></script>
 {% block title %}
-Lista de Filmes
+Sala {{sala_selecionada.getNome()}}
 {% endblock %}
 
 {% block content %}
 
-      
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-        <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}
 
-   
-    <h2>Lista de Filmes</h2>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class=flashes>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 d-flex justify-content-between">
+            <h1 class="page-header">{{sala_selecionada.getNome()}}</h1>
+
+            <div id="gamificação">
+                <img src="{{url_for('logos',nome_arquivo=sala_selecionada.getLogo())}}" class="img-thumbnail"
+                    style="max-width: 80px; max-width: 80px; filter: grayscale(1);" alt="...">
+                <h1 class="page-header">Pontuação</h1>
+                <h1 class="page-header">Ranking</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="col-sm-12">
+        <p><b class="">Tarefas</b></p>
+    </div>
+
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Cartaz</th>
-                <th scope="col">Titulo</th>
-                <th scope="col">Sinopse</th>
-                <th scope="col">Gênero</th>
-                <th scope="col">Data Inicio</th>
-                <th scope="col">Data Fim</th>
-                <th scope="col">Ações</th>
+                <th scope="col">Atividade</th>
+                <th scope="col">Descrição</th>
             </tr>
         </thead>
         <tbody>
-            {% for filme in vetFilmes %}
-    
+            {% for atividade in sala_selecionada.getAtividades() %}
+
             <tr>
-                <th scope="row">{{ filme.id }}</th>
-    
-                <td>
-                   
-                    <img src="{{url_for('cartazes',nome_arquivo=filme.cartaz)}}" class="img-thumbnail"
-                        style="max-width: 80px; max-width: 80px;" alt="...">
-                    
-                </td>
-                <td>{{filme.titulo}}</td>
-                <td>{{filme.sinopse}}</td>
-                <td>{{filme.genero}}</td>
-                <td>{{filme.dataInicio.strftime("%d-%m-%Y")}}</td>
-                <td>{{filme.dataFim.strftime("%d-%m-%Y")}}</td>
-                <td>
-                    <a class="btn btn-danger" href="/filmes/excluirFilme/{{filme.id}}">Excluir</a>
-               
-                    <a class="btn btn-danger" href="/filmes/telaEditarFilme/{{filme.id}}">Editar</a>
-                </td>
+                <td>{{atividade.getNome()}}</td>
+                <td>{{atividade.getDescricao()}}</td>
+</div>
 
-            </tr>
-            
-            {% endfor %}
-        </tbody>
-        
-    </table>
- 
-    <div class="row mx-5 my-5">
-        <div class="col">
-        </div>
-        <div class="col-auto">
-          <a class="btn btn-primary pull-right" href="/filmes/telaAdicionarFilme">Adicionar</a>
-        </div>
-      </div>
+</tr>
 
-      
+{% endfor %}
+</tbody>
 
+</table>
+
+</div>
 {% endblock %}
-

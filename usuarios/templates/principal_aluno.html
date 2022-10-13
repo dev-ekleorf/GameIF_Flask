@@ -22,7 +22,6 @@ Principal
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">ID</th>
                 <th scope="col">Logo</th>
                 <th scope="col">Sala</th>
                 <th scope="col">Atividades Pendentes</th>
@@ -33,15 +32,13 @@ Principal
             {% for sala in arraySalas %}
     
             <tr>
-                <th scope="row" onclick="alert('teste')">{{ sala.getId() }}</th>
-    
                 <td>
-                   
+                   <a href="{{ url_for('salas.carregar_sala',id = sala.getId()) }}">
                     <img src="{{url_for('logos',nome_arquivo=sala.getLogo())}}" class="img-thumbnail"
-                        style="max-width: 80px; max-width: 80px;" alt="Logo da sala." onclick="alert('teste')">
-                    
+                        style="max-width: 80px; max-width: 80px;" alt="Logo da sala." >
+                   </a>
                 </td>
-                <td><a href="{{ url_for('salas.carregar_sala',id = sala.getId()) }}">{{sala.getNome()}}</a></td>
+                <td><a class="nav-link" href="{{ url_for('salas.carregar_sala',id = sala.getId()) }}">{{sala.getNome()}}</a></td>
                 <td>{{sala.andamento}}</td>
                 </div>
                 <td>

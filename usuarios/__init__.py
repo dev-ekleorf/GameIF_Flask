@@ -3,6 +3,7 @@ from flask import Blueprint
 from flask import render_template,redirect, url_for, request, session,send_from_directory,jsonify
 
 from Model.Sala import Sala
+from Model.Atividade import Atividade
 
 usuarios = Blueprint('usuarios', __name__,
                         template_folder='templates', static_folder='static')
@@ -21,7 +22,13 @@ def login():
         session['usuarioLogado'] = 1
         return render_template("principal_professor.html")
     elif(login == "Erik"):
-        sala = Sala(1,"teste","19112021013321_51yHBMzxszL._AC_SY445_.jpg","","")
+        
+        atividade1 = Atividade(1,"Atividade 1","Envie uma foto do livro x")
+        atividade2 = Atividade(1,"Atividade 2","Fale sobre o livro x")
+        array_atividades = []
+        array_atividades.append(atividade1)
+        array_atividades.append(atividade2)
+        sala = Sala(1,"teste","19112021013321_51yHBMzxszL._AC_SY445_.jpg",array_atividades,"")
         arraySalas = []
         arraySalas.append(sala)
         print(sala.getNome())
