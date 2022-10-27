@@ -4,6 +4,7 @@ from flask import render_template,redirect, url_for, request, session,send_from_
 
 from Model.Sala import Sala
 from Model.Atividade import Atividade
+from Model.Usuario import Usuario
 
 usuarios = Blueprint('usuarios', __name__,
                         template_folder='templates', static_folder='static')
@@ -22,17 +23,18 @@ def login():
         session['usuarioLogado'] = 1
         return render_template("principal_professor.html")
     elif(login == "Erik"):
-        
+        session['usuarioLogado'] = 2
         atividade1 = Atividade(1,"Atividade 1","Envie uma foto do livro x")
         atividade2 = Atividade(1,"Atividade 2","Fale sobre o livro x")
         array_atividades = []
         array_atividades.append(atividade1)
         array_atividades.append(atividade2)
-        sala = Sala(1,"teste","19112021013321_51yHBMzxszL._AC_SY445_.jpg",array_atividades,"")
+        sala = Sala(1,"Projeto de Leitura","","livros.webp",array_atividades,"")
         arraySalas = []
         arraySalas.append(sala)
+        sala2 = Sala(1,"Eletrônica","","arduino.jfif",array_atividades,"")
+        arraySalas.append(sala2)
         print(sala.getNome())
-        session['usuarioLogado'] = 2
         return render_template("principal_aluno.html",arraySalas = arraySalas)
     else:
         return redirect("/")
@@ -48,11 +50,22 @@ def login():
 
 @usuarios.route('/principal/<int:id>')
 def principal(id):
-    if(id == 2):
+    if(session['usuarioLogado'] == 1):
         return render_template("principal_professor.html")
 
-    elif(id == 1):
-        return render_template("principal_aluno.html")
+    elif(session['usuarioLogado'] == 2):
+        atividade1 = Atividade(1,"Atividade 1","Envie uma foto do livro x")
+        atividade2 = Atividade(1,"Atividade 2","Fale sobre o livro x")
+        array_atividades = []
+        array_atividades.append(atividade1)
+        array_atividades.append(atividade2)
+        sala = Sala(1,"Projeto de Leitura","","livros.webp",array_atividades,"")
+        arraySalas = []
+        arraySalas.append(sala)
+        sala2 = Sala(1,"Eletrônica","","arduino.jfif",array_atividades,"")
+        arraySalas.append(sala2)
+        print(sala.getNome())
+        return render_template("principal_aluno.html",arraySalas = arraySalas)
 
 @usuarios.route('/listar_usuarios') 
 def listar_usuarios():
@@ -143,3 +156,11 @@ def recuperaUsuarios():
     #for usuario in vetUsuarios:
        #dictUsuarios[usuario.id] = usuario.nome
     #return jsonify(dictUsuarios)
+
+@usuarios.route("/meu_perfil")
+def meu_perfil():
+    print("Meu Perfil")
+    #busca usuário por ID
+    usuario = Usuario(session['usuarioLogado'],"Erik","teste")
+    print(usuario)
+    return render_template("meu_perfil.html",usuario=usuario)

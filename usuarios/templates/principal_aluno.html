@@ -24,7 +24,7 @@ Principal
             <tr>
                 <th scope="col">Logo</th>
                 <th scope="col">Sala</th>
-                <th scope="col">Atividades Pendentes</th>
+                <th scope="col">Atividades</th>
                 <th scope="col">Ações</th>
             </tr>
         </thead>
@@ -35,11 +35,11 @@ Principal
                 <td>
                    <a href="{{ url_for('salas.carregar_sala',id = sala.getId()) }}">
                     <img src="{{url_for('logos',nome_arquivo=sala.getLogo())}}" class="img-thumbnail"
-                        style="max-width: 80px; max-width: 80px;" alt="Logo da sala." >
+                        style="max-width: 80px; max-width: 80px; filter: grayscale(1);"  alt="Logo da sala." >
                    </a>
                 </td>
                 <td><a class="nav-link" href="{{ url_for('salas.carregar_sala',id = sala.getId()) }}">{{sala.getNome()}}</a></td>
-                <td>{{sala.andamento}}</td>
+                <td>0/2</td>
                 </div>
                 <td>
                     <a class="btn btn-danger" href="/salas/desfazerCadastro/{{sala.id}}">Sair da Sala</a>
@@ -56,7 +56,7 @@ Principal
         <div class="col">
         </div>
         <div class="col-auto">
-          <a class="btn btn-primary pull-right" href="/salas/procurarSalas">Procurar Outras Salas</a>
+          <a class="btn btn-primary pull-right" href="/salas/procurar_salas">Procurar Outras Salas</a>
         </div>
       </div>
 

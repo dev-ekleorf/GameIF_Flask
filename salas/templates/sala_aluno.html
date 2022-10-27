@@ -26,18 +26,14 @@ Sala {{sala_selecionada.getNome()}}
             <div id="gamificação">
                 <img src="{{url_for('logos',nome_arquivo=sala_selecionada.getLogo())}}" class="img-thumbnail"
                     style="max-width: 80px; max-width: 80px; filter: grayscale(1);" alt="...">
-                <h1 class="page-header">Pontuação</h1>
-                <h1 class="page-header">Ranking</h1>
+                <h1 class="page-header">Pontuação: 0 | 200</h1>
+                <h1 class="page-header">Ranking:   &nbsp;&nbsp;&nbsp; 9° | 20</h1>
             </div>
         </div>
     </div>
 </div>
 
 <div class="container">
-
-    <div class="col-sm-12">
-        <p><b class="">Tarefas</b></p>
-    </div>
 
     <table class="table">
         <thead>
@@ -52,14 +48,10 @@ Sala {{sala_selecionada.getNome()}}
             <tr>
                 <td>{{atividade.getNome()}}</td>
                 <td>{{atividade.getDescricao()}}</td>
+                <td><a href="#" class="btn btn-primary">Cumprir Atividade</a><td>
 </div>
 
-</tr>
 
 {% endfor %}
-</tbody>
 
-</table>
-
-</div>
 {% endblock %}

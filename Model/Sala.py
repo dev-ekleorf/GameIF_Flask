@@ -1,8 +1,9 @@
 class Sala():
-    def __init__(self,id="",nome="", logo="",atividades=[],participantes=[]):
+    def __init__(self,id="",nome="", descricao="",logo="",atividades=[],participantes=[]):
         self.__id = id
         self.__nome = nome
         self.__logo = logo
+        self.__descricao = descricao
         self.__atividades = atividades
         self.__participantes = participantes
     
@@ -11,6 +12,9 @@ class Sala():
 
     def getNome(self):
         return self.__nome
+
+    def getDescricao(self):
+        return self.__descricao
     
     def getLogo(self):
         return self.__logo

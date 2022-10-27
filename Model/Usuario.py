@@ -1,7 +1,8 @@
 class Usuario():
-    id = ""
-    nome = ""
-    senha = ""
+    def __init__(self,id="",nome="", senha=""):
+        self.__id = id
+        self.__nome = nome
+        self.__senha = senha
     
     def getId(self):
         return self.__id
