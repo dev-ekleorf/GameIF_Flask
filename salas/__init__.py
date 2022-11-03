@@ -11,8 +11,8 @@ salas = Blueprint('salas', __name__,
 
 @salas.route("/carregar_sala/<int:id>")
 def carregar_sala(id):
-    atividade1 = Atividade(1,"Atividade 1","Envie uma foto do livro x")
-    atividade2 = Atividade(1,"Atividade 2","Fale sobre o livro x")
+    atividade1 = Atividade(1,"Atividade 1","Envie uma foto do livro x","Foto")
+    atividade2 = Atividade(2,"Atividade 2","Fale sobre o livro x","RespostaLonga")
     array_atividades = []
     array_atividades.append(atividade1)
     array_atividades.append(atividade2)
@@ -22,7 +22,7 @@ def carregar_sala(id):
 @salas.route("/procurar_salas")
 def procurar_salas():
     atividade1 = Atividade(1,"Atividade 1","Envie uma foto do livro x")
-    atividade2 = Atividade(1,"Atividade 2","Fale sobre o livro x")
+    atividade2 = Atividade(2,"Atividade 2","Fale sobre o livro x")
     array_atividades = []
     array_atividades.append(atividade1)
     array_atividades.append(atividade2)
@@ -36,7 +36,7 @@ def procurar_salas():
 @salas.route("/minhas_salas")
 def minhas_salas():
     atividade1 = Atividade(1,"Atividade 1","Envie uma foto do livro x")
-    atividade2 = Atividade(1,"Atividade 2","Fale sobre o livro x")
+    atividade2 = Atividade(2,"Atividade 2","Fale sobre o livro x")
     array_atividades = []
     array_atividades.append(atividade1)
     array_atividades.append(atividade2)

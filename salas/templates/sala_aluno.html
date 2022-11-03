@@ -35,23 +35,51 @@ Sala {{sala_selecionada.getNome()}}
 
 <div class="container">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Atividade</th>
-                <th scope="col">Descrição</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for atividade in sala_selecionada.getAtividades() %}
-
-            <tr>
-                <td>{{atividade.getNome()}}</td>
-                <td>{{atividade.getDescricao()}}</td>
-                <td><a href="#" class="btn btn-primary">Cumprir Atividade</a><td>
+   <div class="accordion" id="accordionExample">
+        {% for tarefa in sala_selecionada.getAtividades() %}
+        <div class="accordion-item">
+          <h2 class="accordion-header" id={{tarefa.getId()}}>
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_{{tarefa.getId()}}" aria-expanded="true" aria-controls="collapse_{{tarefa.getId()}}">
+              {{tarefa.getNome()}}
+            </button>
+          </h2>
+          <div id="collapse_{{tarefa.getId()}}" class="accordion-collapse collapse" aria-labelledby={{tarefa.getId()}} data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <strong>{{tarefa.getDescricao()}}</strong> 
+              {% if tarefa.getTipo() == "Foto" %}
+              <form>
+                <div class="form-group m-2">
+                  <label class="form-label" for="customFile">Envie a foto</label>
+                  <input type="file" class="form-control" id="customFile" />
+                </div>
+                <button type="submit" class="btn btn-primary align-items-end flex-column">Enviar</button>
+              </form>
+                
+              {% elif tarefa.getTipo() == "RespostaLonga" %}
+              <form>
+                <div class="form-group m-2">
+                  <label for="exampleFormControlTextarea1">Escreva sua Resposta</label>
+                  <textarea class="form-control" id="exampleFormControlTextarea1" rows="15"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary align-items-end flex-column">Enviar</button>
+              </form>
+              {% elif tarefa.getTipo() == "RespostaCurta" %}
+              <form>
+                <div class="form-group m-2">
+                  <label for="exampleFormControlTextarea1">Escreva sua Resposta</label>
+                  <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary align-items-end flex-column">Enviar</button>
+              </form>
+              {% endif %} 
+            </div>
+          </div>
+        </div>
+      
+      {% endfor %}
+    </div>
 </div>
 
 
-{% endfor %}
 
 {% endblock %}

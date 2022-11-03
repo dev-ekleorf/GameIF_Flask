@@ -1,8 +1,9 @@
 class Atividade():
-    def __init__(self,id="",nome="", descricao=""):
+    def __init__(self,id="",nome="", descricao="",tipo=""):
         self.__id = id
         self.__nome = nome
         self.__descricao = descricao
+        self.__tipo = tipo
   
     
     def getId(self):
@@ -14,3 +15,5 @@ class Atividade():
     def getDescricao(self):
         return self.__descricao
     
+    def getTipo(self):
+        return self.__tipo   
