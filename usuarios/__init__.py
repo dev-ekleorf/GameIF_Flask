@@ -1,6 +1,11 @@
 from flask import Flask
 from flask import Blueprint
-from flask import render_template,redirect, url_for, request, session,send_from_directory,jsonify
+from flask import render_template,redirect, url_for, request, session,send_from_directory
+from DAO.UsuarioDAO import UsuarioDAO
+from DAO.SalaDAO import SalaDAO
+from Model.Usuario import Usuario
+from flask import json, jsonify
+from flask_bcrypt import Bcrypt
 
 from Model.Sala import Sala
 from Model.Atividade import Atividade
@@ -8,64 +13,51 @@ from Model.Usuario import Usuario
 
 usuarios = Blueprint('usuarios', __name__,
                         template_folder='templates', static_folder='static')
+bcrypt = Bcrypt()
 
 
 @usuarios.route("/login",methods=['POST'])
 def login():
     login = request.form['login']
     senha = request.form['senha']
-
-    #bypass Login
-    #Implementar!
     print("Login: "+login)
+    print("senha: "+senha)
 
-    if(login == "Raquel"):
-        session['usuarioLogado'] = 1
-        return render_template("principal_professor.html")
-    elif(login == "Erik"):
-        session['usuarioLogado'] = 2
-        atividade1 = Atividade(1,"Atividade 1","Envie uma foto do livro x")
-        atividade2 = Atividade(1,"Atividade 2","Fale sobre o livro x")
-        array_atividades = []
-        array_atividades.append(atividade1)
-        array_atividades.append(atividade2)
-        sala = Sala(1,"Projeto de Leitura","","livros.webp",array_atividades,"")
-        arraySalas = []
-        arraySalas.append(sala)
-        sala2 = Sala(1,"Eletrônica","","arduino.jfif",array_atividades,"")
-        arraySalas.append(sala2)
-        print(sala.getNome())
-        return render_template("principal_aluno.html",arraySalas = arraySalas)
-    else:
+    usuario_logado = Usuario()
+    usuario_logado = UsuarioDAO.validaLogin(login,senha)
+    if(usuario_logado == False):
+        print("Falha ao logar")
         return redirect("/")
-
-    #usuarioDAO = UsuarioDAO()
-    #id = usuarioDAO.validaLogin(login,senha)
-    print("Usuario logado: "+str(id))
-    #if(id):
-        #session['usuarioLogado'] = id
-       # return redirect(url_for("principal"))
-    #else:
-       # return redirect("/")
+    else:
+        session['usuarioLogado'] = usuario_logado.id
+        session['tipo_usuario'] = usuario_logado.tipo
+        salas = SalaDAO.recupera_salas_usuario(usuario_logado.id)
+        if(usuario_logado.tipo == "professor"):
+            return render_template("principal_professor.html",arraySalas=salas)
+        elif(usuario_logado.tipo == "aluno"):
+            print("Vai para a tela de Principal Aluno")
+            for sala in salas:
+                print(sala.nome)
+            return render_template("principal_aluno.html",arraySalas=salas)
+        elif(usuario_logado.tipo == "administrador"):
+            return render_template("principal_administrador.html")
+    return redirect("/")
 
 @usuarios.route('/principal/<int:id>')
 def principal(id):
-    if(session['usuarioLogado'] == 1):
-        return render_template("principal_professor.html")
 
-    elif(session['usuarioLogado'] == 2):
-        atividade1 = Atividade(1,"Atividade 1","Envie uma foto do livro x")
-        atividade2 = Atividade(1,"Atividade 2","Fale sobre o livro x")
-        array_atividades = []
-        array_atividades.append(atividade1)
-        array_atividades.append(atividade2)
-        sala = Sala(1,"Projeto de Leitura","","livros.webp",array_atividades,"")
-        arraySalas = []
-        arraySalas.append(sala)
-        sala2 = Sala(1,"Eletrônica","","arduino.jfif",array_atividades,"")
-        arraySalas.append(sala2)
-        print(sala.getNome())
-        return render_template("principal_aluno.html",arraySalas = arraySalas)
+    atividade1 = Atividade(1,"Atividade 1","Envie uma foto do livro x")
+    atividade2 = Atividade(1,"Atividade 2","Fale sobre o livro x")
+    array_atividades = []
+    array_atividades.append(atividade1)
+    array_atividades.append(atividade2)
+    sala = Sala(1,"Projeto de Leitura","","livros.webp",array_atividades,"")
+    arraySalas = []
+    arraySalas.append(sala)
+    sala2 = Sala(1,"Eletrônica","","arduino.jfif",array_atividades,"")
+    arraySalas.append(sala2)
+    print(sala.getNome())
+    return render_template("principal_aluno.html",arraySalas = arraySalas)
 
 @usuarios.route('/listar_usuarios') 
 def listar_usuarios():
@@ -74,23 +66,24 @@ def listar_usuarios():
     except Exception as e: 
         return f"Ocorreu um erro: {e}"
 
+
 @usuarios.route("/adicionarUsuario",methods=['POST'])
 def adicionarUsuario():
     
     usuario = request.form['usuario']
-    #senha = str(bcrypt.generate_password_hash(request.form['senha']).decode('utf-8'))
+    senha = str(bcrypt.generate_password_hash(request.form['senha']).decode('utf-8'))
     print("usuarioform: "+usuario)
-    #print("senhaform: "+senha)
+    print("senhaform: "+senha)
 
-    #user = Usuario(nome=usuario,senha=senha)
+    user = Usuario(nome=usuario,senha=senha,tipo="aluno")
     
-    #print("usuariomodel: "+user.nome)
-   # print("senhamodel: "+user.senha)
-    #usuarioDAO = UsuarioDAO()    
+    print("usuariomodel: "+user.nome)
+    print("senhamodel: "+user.senha)
+    usuarioDAO = UsuarioDAO()    
     
-    #usuarioDAO.adicionaUsuario(user)
+    usuarioDAO.adicionaUsuario(user)
 
-    return redirect("usuarios")
+    return redirect("/")
 
 @usuarios.route("/tela_cadastro")
 def telaCadastro():

@@ -1,12 +1,13 @@
-class Sala():
-    def __init__(self,id="",nome="", descricao="",logo="",atividades=[],participantes=[]):
-        self.__id = id
-        self.__nome = nome
-        self.__logo = logo
-        self.__descricao = descricao
-        self.__atividades = atividades
-        self.__participantes = participantes
-    
+from helper.config import *
+
+class Sala(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String, unique=True, nullable=False)
+    logo = db.Column(db.String, nullable=True)
+    descricao = db.Column(db.String, nullable=True)
+    atividades = db.relationship("Atividade")
+    #participantes = db.relationship('Usuarios', secondary="Usuario_participa_sala", backref='salas')
+        
     def getId(self):
         return self.__id
 

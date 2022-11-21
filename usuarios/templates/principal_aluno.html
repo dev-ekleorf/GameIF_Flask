@@ -33,12 +33,12 @@ Principal
     
             <tr>
                 <td>
-                   <a href="{{ url_for('salas.carregar_sala',id = sala.getId()) }}">
-                    <img src="{{url_for('logos',nome_arquivo=sala.getLogo())}}" class="img-thumbnail"
+                   <a href="{{ url_for('salas.carregar_sala',id = sala.id) }}">
+                    <img src="{{url_for('logos',nome_arquivo=sala.logo)}}" class="img-thumbnail"
                         style="max-width: 80px; max-width: 80px; filter: grayscale(1);"  alt="Logo da sala." >
                    </a>
                 </td>
-                <td><a class="nav-link" href="{{ url_for('salas.carregar_sala',id = sala.getId()) }}">{{sala.getNome()}}</a></td>
+                <td><a class="nav-link" href="{{ url_for('salas.carregar_sala',id = sala.id) }}">{{sala.nome}}</a></td>
                 <td>0/2</td>
                 </div>
                 <td>

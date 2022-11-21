@@ -3,28 +3,32 @@ from flask import blueprints
 from DAO.UsuarioDAO import UsuarioDAO
 from usuarios import usuarios
 from salas import salas
+from flask_bcrypt import Bcrypt
+from helper.config import *
 
 app = Flask(__name__)
 app.secret_key=b'gifkey#635jk8927'
+bcrypt = Bcrypt(app)
 
-import firebase_admin
-from firebase_admin import credentials, firestore, initialize_app
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost:5432/gameif_db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
-cred = credentials.Certificate("C:\\Users\\ekleorf\\Documents\\gameif-key.json")
-firebase_admin.initialize_app(cred)
-db = firestore.client() 
-
+usuario_participa_sala = db.Table(
+    "usuario_participa_sala",
+    db.Column("id",db.Integer, primary_key=True),
+    db.Column("usuario_id",db.Integer,db.ForeignKey("usuario.id")),
+    db.Column("sala_id",db.Integer,db.ForeignKey("sala.id")),
+    db.Column("pontuacao",db.Integer)
+)
 app.register_blueprint(usuarios,url_prefix='/usuarios')
 app.register_blueprint(salas,url_prefix='/salas')
 
+db.init_app(app)
 
 @app.route("/")
 def index():
-    print("Inicial.")
-    emp_ref = db.collection('usuarios')
-    docs = emp_ref.stream()
-    for doc in docs: print('{} => {} '.format(doc.id, doc.to_dict()))
-    usuario_dao = UsuarioDAO().listar_usuarios()
+    #db.drop_all()
+    #db.create_all()
     return render_template("telaLogin.html")
 
 @app.route('/logos/<nome_arquivo>')

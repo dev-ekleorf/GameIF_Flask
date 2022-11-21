@@ -1,9 +1,11 @@
-class Atividade():
-    def __init__(self,id="",nome="", descricao="",tipo=""):
-        self.__id = id
-        self.__nome = nome
-        self.__descricao = descricao
-        self.__tipo = tipo
+from helper.config import *
+
+class Atividade(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String, nullable=False)
+    descricao = db.Column(db.String, nullable=False)
+    tipo = db.Column(db.String, nullable=False)
+    sala_id = db.Column(db.Integer, db.ForeignKey("sala.id"))
   
     
     def getId(self):

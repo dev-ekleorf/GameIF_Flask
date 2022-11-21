@@ -1,14 +1,10 @@
-class Usuario():
-    def __init__(self,id="",nome="", senha=""):
-        self.__id = id
-        self.__nome = nome
-        self.__senha = senha
-    
-    def getId(self):
-        return self.__id
+from helper.config import *
 
-    def getNome(self):
-        return self.__nome
-    
-    def getSenha(self):
-        return self.__senha
+class Usuario(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String, unique=True, nullable=False)
+    senha = db.Column(db.String, nullable=False)
+    avatar = db.Column(db.String, nullable=True)
+    tipo = db.Column(db.String, nullable=False)
+    participando = db.relationship('Sala', secondary="usuario_participa_sala", backref='participantes')
+
