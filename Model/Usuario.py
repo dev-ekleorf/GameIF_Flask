@@ -6,5 +6,5 @@ class Usuario(db.Model):
     senha = db.Column(db.String, nullable=False)
     avatar = db.Column(db.String, nullable=True)
     tipo = db.Column(db.String, nullable=False)
-    participando = db.relationship('Sala', secondary="usuario_participa_sala", backref='participantes')
+    salas = db.relationship('Sala',secondary="participacoes",back_populates="participantes")
 

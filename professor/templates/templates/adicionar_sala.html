@@ -1,0 +1,47 @@
+{% extends "base_professor.html" %}
+<script src="{{ asset('js/bootstrap-datepicker.min.js')}}"></script>
+
+{% block title %}
+Adicionar sala
+{% endblock %}
+
+{% block content %}
+
+      
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+        <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+    <h2>Nova Sala: </h2>
+    <form class="row g-3" action="/salas/criarSala" method="post" name="formularioCriarSala" enctype=multipart/form-data>
+        <div class="col-md-12">
+            <label for="nome_sala" class="form-label">Nome da Sala
+                <span class="text-danger font-weight-bold">*</span>
+            </label>
+            <input type="text" name="nome_sala" class="form-control" id="nome_sala" required>
+        </div>
+        <div class="col-md-12">
+            <label for="genero" class="form-label">Descrição
+                <span class="text-danger font-weight-bold">*</span>
+            </label>
+            <input type="text" name="descricao" class="form-control" id="descricao" required>
+        </div>
+        <div class="col-md-12">
+
+        <div class="col-md-12">
+            <label for="file" class="form-label">Logo</label>
+            <input type=file class="form-control" name=logo id="logo" accept="image/*" />
+        </div>
+
+        <button type="submit" class="btn btn-primary my-5" onclick="validarCriarSala()"
+            name="criar">Criar</button>
+    </form>
+
+{% endblock %}
+

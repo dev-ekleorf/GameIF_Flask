@@ -1,0 +1,44 @@
+{% extends "base_aluno.html" %}
+<script src="{{ asset('js/bootstrap-datepicker.min.js')}}"></script>
+{% block title %}
+Salas Disponíveis
+{% endblock %}
+
+{% block content %}
+
+      
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+        <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+   
+    <h2>Salas Disponíveis</h2>
+    <div class="bd-example bd-example-placeholder-cards d-flex justify-content-around">
+            {% for sala in salas %}
+            <div class="card">
+                
+                        <img src="{{url_for('logos',nome_arquivo=sala.logo)}}" class="img-thumbnail" alt="...">
+                 
+              
+                <div class="card-body">
+                  <h5 class="card-title">{{sala.nome}}</h5>
+                  <p class="card-text">{{sala.descricao}}.</p>
+                  <a href="/salas/participar/{{sala.id}}" class="btn btn-primary">Participar</a>
+                </div>
+              </div>
+            
+            {% endfor %}
+    </div>
+ 
+
+
+      
+
+{% endblock %}
+

@@ -31,7 +31,8 @@ def login():
     else:
         session['usuarioLogado'] = usuario_logado.id
         session['tipo_usuario'] = usuario_logado.tipo
-        salas = SalaDAO.recupera_salas_usuario(usuario_logado.id)
+        salaDAO = SalaDAO()
+        salas = salaDAO.recupera_salas_usuario(usuario_logado)
         if(usuario_logado.tipo == "professor"):
             return render_template("principal_professor.html",arraySalas=salas)
         elif(usuario_logado.tipo == "aluno"):
@@ -39,30 +40,32 @@ def login():
             for sala in salas:
                 print(sala.nome)
             return render_template("principal_aluno.html",arraySalas=salas)
-        elif(usuario_logado.tipo == "administrador"):
-            return render_template("principal_administrador.html")
+        elif(usuario_logado.tipo == "admin"):
+            usuarios = UsuarioDAO.listarUsuarios()
+            return render_template("principal_administrador.html",usuarios=usuarios)
     return redirect("/")
 
-@usuarios.route('/principal/<int:id>')
-def principal(id):
-
-    atividade1 = Atividade(1,"Atividade 1","Envie uma foto do livro x")
-    atividade2 = Atividade(1,"Atividade 2","Fale sobre o livro x")
-    array_atividades = []
-    array_atividades.append(atividade1)
-    array_atividades.append(atividade2)
-    sala = Sala(1,"Projeto de Leitura","","livros.webp",array_atividades,"")
-    arraySalas = []
-    arraySalas.append(sala)
-    sala2 = Sala(1,"Eletrônica","","arduino.jfif",array_atividades,"")
-    arraySalas.append(sala2)
-    print(sala.getNome())
-    return render_template("principal_aluno.html",arraySalas = arraySalas)
+@usuarios.route('/principal')
+def principal():
+    id_usuario = session['usuarioLogado']
+    usuarioDAO = UsuarioDAO()
+    usuario_logado = usuarioDAO.recuperaUsuario(id_usuario)
+    salaDAO = SalaDAO()
+    arraySalas = salaDAO.recupera_salas_usuario(usuario_logado)
+    salas = salaDAO.recupera_salas_usuario(usuario_logado)
+    if(usuario_logado.tipo == "professor"):
+        return render_template("principal_professor.html",arraySalas=arraySalas)
+    elif(usuario_logado.tipo == "aluno"):
+        return render_template("principal_aluno.html",arraySalas=arraySalas)
+    elif(usuario_logado.tipo == "admin"):
+        usuarios = UsuarioDAO.listarUsuarios()
+        return render_template("principal_administrador.html",usuarios=usuarios)
 
 @usuarios.route('/listar_usuarios') 
 def listar_usuarios():
     try: 
-        print("")
+        usuarios = UsuarioDAO.listarUsuarios()
+        return render_template("principal_administrador.html",usuarios=usuarios)
     except Exception as e: 
         return f"Ocorreu um erro: {e}"
 
@@ -112,9 +115,9 @@ def telaAdicionarUsuario():
 
 @usuarios.route("/excluirUsuario/<int:id>")
 def excluirUsuario(id):
-    #usuarioDAO = UsuarioDAO()
-    #usuarioDAO.removeUsuario(id)
-    return redirect(url_for('usuarios.listarUsuarios'))
+    usuarioDAO = UsuarioDAO()
+    usuarioDAO.removeUsuario(id)
+    return redirect(url_for('usuarios.listar_usuarios'))
 
 @usuarios.route("/telaEditarUsuario/<int:id>")
 def telaEditarUsuario(id):
@@ -157,3 +160,11 @@ def meu_perfil():
     usuario = Usuario(session['usuarioLogado'],"Erik","teste")
     print(usuario)
     return render_template("meu_perfil.html",usuario=usuario)
+
+@usuarios.route("/minhas_salas/<int:id_usuario>")
+def minhas_salas(id_usuario):
+    if session['tipo_usuario'] == "professor":
+        return redirect(url_for('professor.principal'))
+    elif session['tipo_usuario'] == "aluno":
+        return redirect(url_for('aluno.principal'))
+

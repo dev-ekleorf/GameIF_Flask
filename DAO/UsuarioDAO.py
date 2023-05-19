@@ -12,7 +12,7 @@ class UsuarioDAO:
         db.session.add(usuario)
         db.session.commit()
     
-    def listarUsuarios(self):
+    def listarUsuarios():
         vetUsuarios = Usuario.query.all()
         return vetUsuarios
 

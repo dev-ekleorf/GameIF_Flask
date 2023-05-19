@@ -1,0 +1,59 @@
+{% extends "base_professor.html" %}
+<script src="{{ asset('js/bootstrap-datepicker.min.js')}}"></script>
+{% block title %}
+Cadastro de Usuários
+{% endblock %}
+
+{% block content %}
+
+      
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+        <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+   
+    <h2>Lista de Usuários</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+    
+            <tr>
+                <th scope="row">{{ usuario.id }}</th>
+                <td>{{usuario.nome}}</td>
+                <td>
+                    <a class="btn btn-danger" href="/usuarios/excluirUsuario/{{usuario.id}}">Excluir</a>
+               
+                    <a class="btn btn-danger" href="/usuarios/telaEditarUsuario/{{usuario.id}}">Editar</a>
+                </td>
+
+            </tr>
+            
+            {% endfor %}
+        </tbody>
+        
+    </table>
+ 
+    <div class="row mx-5 my-5">
+        <div class="col">
+        </div>
+        <div class="col-auto">
+          <a class="btn btn-primary pull-right" href="/usuarios/telaAdicionarUsuario">Adicionar</a>
+        </div>
+      </div>
+
+      
+
+{% endblock %}
