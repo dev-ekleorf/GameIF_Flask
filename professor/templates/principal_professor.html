@@ -1,0 +1,66 @@
+{% extends "base_professor.html" %}
+<script src="{{ asset('js/bootstrap-datepicker.min.js')}}"></script>
+{% block title %}
+Principal
+{% endblock %}
+
+{% block content %}
+
+      
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+        <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+   
+    <h2>Minhas Salas</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Logo</th>
+                <th scope="col">Sala</th>
+                <th scope="col">Participantes</th>
+                <th scope="col">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sala in arraySalas %}
+    
+            <tr>
+                <td>
+                   <a href="{{ url_for('professor.carregar_sala',id = sala.id) }}">
+                    <img src="{{url_for('logos',nome_arquivo=sala.logo)}}" class="img-thumbnail"
+                        style="max-width: 80px; max-width: 80px; filter: grayscale(1);"  alt="Logo da sala." >
+                   </a>
+                </td>
+                <td><a class="nav-link" href="{{ url_for('professor.carregar_sala',id = sala.id) }}">{{sala.nome}}</a></td>
+                <td>{{sala.participantes|count}}</td>
+                </div>
+                <td>
+                    <a class="btn btn-danger" href="/professor/excluir_sala/{{sala.id}}">Excluir da Sala</a>
+                </td>
+
+            </tr>
+            
+            {% endfor %}
+        </tbody>
+        
+    </table>
+ 
+    <div class="row mx-5 my-5">
+        <div class="col">
+        </div>
+        <div class="col-auto">
+          <a class="btn btn-primary pull-right" href="/professor/tela_criar_sala">Criar Sala</a>
+        </div>
+      </div>
+
+      
+
+{% endblock %}
+

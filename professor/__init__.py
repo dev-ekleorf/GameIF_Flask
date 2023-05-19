@@ -62,13 +62,7 @@ def criar_sala():
     salaDAO.adicionarSala(sala)
     print("session['usuarioLogado']: "+str(session['usuarioLogado']))
     id_usuario = session['usuarioLogado']
-    return redirect(url_for('salas.minhas_salas',id_usuario=id_usuario))
-
-@professor.route("/carregar_sala/<int:id>")
-def carregar_sala(id):
-    salaDAO = SalaDAO()
-    sala_selecionada = salaDAO.recuperaSala(id)
-    return render_template("sala_professor.html",sala_selecionada=sala_selecionada)
+    return redirect(url_for('professor.principal'))
 
 @professor.route("/tela_criar_sala")
 def tela_criar_salas():

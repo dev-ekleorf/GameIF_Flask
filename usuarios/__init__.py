@@ -34,15 +34,13 @@ def login():
         salaDAO = SalaDAO()
         salas = salaDAO.recupera_salas_usuario(usuario_logado)
         if(usuario_logado.tipo == "professor"):
-            return render_template("principal_professor.html",arraySalas=salas)
+            return redirect(url_for('professor.principal'))
         elif(usuario_logado.tipo == "aluno"):
             print("Vai para a tela de Principal Aluno")
-            for sala in salas:
-                print(sala.nome)
-            return render_template("principal_aluno.html",arraySalas=salas)
+            return redirect(url_for('aluno.principal'))
         elif(usuario_logado.tipo == "admin"):
             usuarios = UsuarioDAO.listarUsuarios()
-            return render_template("principal_administrador.html",usuarios=usuarios)
+            return redirect(url_for('admin.principal'))
     return redirect("/")
 
 @usuarios.route('/principal')
@@ -157,7 +155,9 @@ def recuperaUsuarios():
 def meu_perfil():
     print("Meu Perfil")
     #busca usuário por ID
-    usuario = Usuario(session['usuarioLogado'],"Erik","teste")
+    id_usuario = session['usuarioLogado']
+    usuarioDAO = UsuarioDAO()
+    usuario = usuarioDAO.recuperaUsuario(id_usuario)
     print(usuario)
     return render_template("meu_perfil.html",usuario=usuario)
 

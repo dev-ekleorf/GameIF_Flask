@@ -4,6 +4,7 @@ from DAO.UsuarioDAO import UsuarioDAO
 from usuarios import usuarios
 from professor import professor
 from aluno import aluno
+from admin import admin
 from flask_bcrypt import Bcrypt
 from helper.config import *
 
