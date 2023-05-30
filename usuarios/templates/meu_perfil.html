@@ -1,5 +1,34 @@
+{% if usuario.tipo == 'aluno' %}
+    {% extends 'base_aluno.html' %}
+{% else %}
+    {% extends 'base_professor.html' %}
+{% endif %}
+
+
+{% block title %}
+Meu Perfil
+{% endblock %}
+
 {% block content %}
-<h2>{{usuario.id}}</h2>
-<h2>{{usuario.nome}}</h2>
-<h2>{{usuario.senha}}</h2>
-{% endblock%}
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endwith %}
+
+<div class="container">
+    <h2>Informações do Usuário</h2>
+    <div>
+        <img src="{{url_for('logos',nome_arquivo=usuario.avatar)}}" class="img-thumbnail"
+                        style="max-width: 80px; max-width: 80px; filter: grayscale(1);"  alt="Avatar do Usuário" >
+        <h4>Nome do Usuário: {{usuario.nome}}</h4>
+        <h4>Tipo: {{usuario.tipo}}</h4>
+    </div>
+</div>
+
+{% endblock %}

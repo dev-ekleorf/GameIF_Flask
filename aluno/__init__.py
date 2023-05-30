@@ -15,7 +15,6 @@ from Model.Usuario import Usuario
 aluno = Blueprint('aluno', __name__,
                         template_folder='templates', static_folder='static')
 
-
 @aluno.route("/procurar_salas")
 def procurar_salas():
     salaDAO = SalaDAO()
@@ -30,7 +29,7 @@ def participar(id):
     usuarioDAO = UsuarioDAO()
     sala.participantes.append(usuarioDAO.recuperaUsuario(id_usuario))
     salaDAO.editarSala(sala)
-    return redirect(url_for('aluno.minhas_salas',id_usuario=id_usuario))
+    return redirect(url_for('usuarios.minhas_salas',id_usuario=id_usuario))
 
 
 @aluno.route("/sair_da_sala/<int:id_sala>")

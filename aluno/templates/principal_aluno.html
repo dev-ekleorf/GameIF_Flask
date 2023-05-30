@@ -33,16 +33,16 @@ Principal
     
             <tr>
                 <td>
-                   <a href="{{ url_for('salas.carregar_sala',id = sala.id) }}">
+                   <a href="{{ url_for('aluno.carregar_sala',id = sala.id) }}">
                     <img src="{{url_for('logos',nome_arquivo=sala.logo)}}" class="img-thumbnail"
                         style="max-width: 80px; max-width: 80px; filter: grayscale(1);"  alt="Logo da sala." >
                    </a>
                 </td>
-                <td><a class="nav-link" href="{{ url_for('salas.carregar_sala',id = sala.id) }}">{{sala.nome}}</a></td>
+                <td><a class="nav-link" href="{{ url_for('aluno.carregar_sala',id = sala.id) }}">{{sala.nome}}</a></td>
                 <td>0/2</td>
                 </div>
                 <td>
-                    <a class="btn btn-danger" href="/salas/sair_da_sala/{{sala.id}}">Sair da Sala</a>
+                    <a class="btn btn-danger" href="/aluno/sair_da_sala/{{sala.id}}">Sair da Sala</a>
                 </td>
 
             </tr>
@@ -56,7 +56,7 @@ Principal
         <div class="col">
         </div>
         <div class="col-auto">
-          <a class="btn btn-primary pull-right" href="/salas/procurar_salas">Procurar Outras Salas</a>
+          <a class="btn btn-primary pull-right" href="/aluno/procurar_salas">Procurar Outras Salas</a>
         </div>
       </div>
 

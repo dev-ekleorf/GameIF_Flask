@@ -31,17 +31,8 @@ def login():
     else:
         session['usuarioLogado'] = usuario_logado.id
         session['tipo_usuario'] = usuario_logado.tipo
-        salaDAO = SalaDAO()
-        salas = salaDAO.recupera_salas_usuario(usuario_logado)
-        if(usuario_logado.tipo == "professor"):
-            return redirect(url_for('professor.principal'))
-        elif(usuario_logado.tipo == "aluno"):
-            print("Vai para a tela de Principal Aluno")
-            return redirect(url_for('aluno.principal'))
-        elif(usuario_logado.tipo == "admin"):
-            usuarios = UsuarioDAO.listarUsuarios()
-            return redirect(url_for('admin.principal'))
-    return redirect("/")
+        return redirect(url_for('usuarios.principal'))
+
 
 @usuarios.route('/principal')
 def principal():
@@ -52,7 +43,7 @@ def principal():
     arraySalas = salaDAO.recupera_salas_usuario(usuario_logado)
     salas = salaDAO.recupera_salas_usuario(usuario_logado)
     if(usuario_logado.tipo == "professor"):
-        return render_template("principal_professor.html",arraySalas=arraySalas)
+        return redirect(url_for('professor.principal'))
     elif(usuario_logado.tipo == "aluno"):
         return render_template("principal_aluno.html",arraySalas=arraySalas)
     elif(usuario_logado.tipo == "admin"):
@@ -161,10 +152,6 @@ def meu_perfil():
     print(usuario)
     return render_template("meu_perfil.html",usuario=usuario)
 
-@usuarios.route("/minhas_salas/<int:id_usuario>")
-def minhas_salas(id_usuario):
-    if session['tipo_usuario'] == "professor":
-        return redirect(url_for('professor.principal'))
-    elif session['tipo_usuario'] == "aluno":
-        return redirect(url_for('aluno.principal'))
-
+@usuarios.route("/minhas_salas")
+def minhas_salas():
+        return redirect(url_for('usuarios.principal'))
