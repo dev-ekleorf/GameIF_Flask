@@ -18,7 +18,10 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-          <a class="navbar-brand" href="/usuarios/principal">GameIF</a>
+          <a class="navbar-brand" href="{{ url_for('usuarios.principal') }}">
+            <img src="{{url_for('logos',nome_arquivo='logo_gameIF.jpeg')}}" class="img-thumbnail"
+              style="max-width: 80px; max-width: 80px;" alt="Logo da Plataforma GameIF.">
+          </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -26,7 +29,7 @@
             <div class="navbar-nav  mr-auto">
               <a class="nav-link active" aria-current="page" href="/usuarios/principal">Home</a>
               <a class="nav-link" href="/usuarios/principal">Minhas Salas</a>
-              <a class="nav-link" href="/salas/procurar_salas">Procurar Novas Salas</a>
+              <a class="nav-link" href="/aluno/procurar_salas">Procurar Novas Salas</a>
               <a class="nav-link" href="/usuarios/meu_perfil">Meu Perfil</a>
               <a href="/usuarios/logout" class="nav-link text-danger">Logout</a>
             </div>

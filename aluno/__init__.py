@@ -48,4 +48,5 @@ def sair_da_sala(id_sala):
 def carregar_sala(id):
     salaDAO = SalaDAO()
     sala_selecionada = salaDAO.recuperaSala(id)
-    return render_template("sala_aluno.html",sala_selecionada=sala_selecionada)
+    pontuacao = sum(atividade.pontuacao for atividade in sala_selecionada.atividades)
+    return render_template("sala_aluno.html",sala_selecionada=sala_selecionada,pontuacao=pontuacao)

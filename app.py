@@ -38,3 +38,7 @@ def index():
 @app.route('/logos/<nome_arquivo>')
 def logos(nome_arquivo):
     return send_from_directory('logos', nome_arquivo)
+
+@app.route('/avatar/<nome_arquivo>')
+def avatar(nome_arquivo):
+    return send_from_directory('avatar', nome_arquivo)

@@ -78,11 +78,13 @@ def adicionar_atividade(id_sala):
     print("Criar atividade.")
     nome=request.form['nome_atividade']
     descricao=request.form['descricao']
+    pontuacao=request.form['pontuacao']
     tipo_atividade=request.form['tipo_atividade']
     print("nome: "+nome)
     print("descricao: "+descricao)
+    print("pontuacao: "+pontuacao)
     print("tipo_atividade: "+tipo_atividade)
-    atividade = Atividade(nome=nome,descricao=descricao,tipo=tipo_atividade)
+    atividade = Atividade(nome=nome,descricao=descricao,pontuacao=pontuacao,tipo=tipo_atividade)
     salaDAO = SalaDAO()
     sala = salaDAO.recuperaSala(id_sala)
     sala.atividades.append(atividade)

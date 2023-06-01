@@ -6,6 +6,7 @@ from DAO.SalaDAO import SalaDAO
 from Model.Usuario import Usuario
 from flask import json, jsonify
 from flask_bcrypt import Bcrypt
+import datetime
 
 from Model.Sala import Sala
 from Model.Atividade import Atividade
@@ -64,15 +65,26 @@ def adicionarUsuario():
     
     usuario = request.form['usuario']
     senha = str(bcrypt.generate_password_hash(request.form['senha']).decode('utf-8'))
-    print("usuarioform: "+usuario)
-    print("senhaform: "+senha)
+    avatar = request.files['avatar_usuario']
+    tipo_usuario = request.form['tipo-usuario']
 
-    user = Usuario(nome=usuario,senha=senha,tipo="aluno")
-    
-    print("usuariomodel: "+user.nome)
-    print("senhamodel: "+user.senha)
-    usuarioDAO = UsuarioDAO()    
-    
+    if(avatar.filename == ""):
+        dataSave = ""
+        endereco_arquivo="avatar.jpg"
+    else:    
+        dataSave = datetime.datetime.now().strftime('%d%m%Y%H%M%S')
+        print(dataSave)
+        avatar.save(f'avatar/{dataSave}_{avatar.filename}')
+        endereco_arquivo = dataSave+'_'+avatar.filename
+
+    print("usuario: "+usuario)
+    print("senha: "+senha)
+    print("tipo_usuario: "+tipo_usuario)
+    print("avatar: "+endereco_arquivo)
+
+    user = Usuario(nome=usuario,senha=senha,tipo=tipo_usuario,avatar=endereco_arquivo)
+
+    usuarioDAO = UsuarioDAO()        
     usuarioDAO.adicionaUsuario(user)
 
     return redirect("/")
@@ -81,22 +93,6 @@ def adicionarUsuario():
 def telaCadastro():
     return render_template("tela_cadastro.html")
 
-@usuarios.route("/cadastrarUsuario",methods=['POST'])
-def cadastrarUsuario():
-    usuario = request.form['usuario']
-    #senha = str(bcrypt.generate_password_hash(request.form['senha']).decode('utf-8'))
-    print("usuario: "+usuario)
-    #print("senha: "+senha)
-
-    #user = Usuario("",usuario,senha)
-    #print("usuariomodel: "+user.nome)
-    #print("senhamodel: "+user.senha)
-
-    #usuarioDAO = UsuarioDAO()    
-    
-    #usuarioDAO.adicionaUsuario(user)
-
-    return redirect("/")
 
 @usuarios.route("/telaAdicionarUsuario")
 def telaAdicionarUsuario():

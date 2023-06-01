@@ -39,7 +39,7 @@ Principal
                    </a>
                 </td>
                 <td><a class="nav-link" href="{{ url_for('aluno.carregar_sala',id = sala.id) }}">{{sala.nome}}</a></td>
-                <td>0/2</td>
+                <td>0/{{sala.atividades|count}}</td>
                 </div>
                 <td>
                     <a class="btn btn-danger" href="/aluno/sair_da_sala/{{sala.id}}">Sair da Sala</a>
