@@ -23,7 +23,9 @@ Cadastro de Usuários
         <thead>
             <tr>
                 <th scope="col">ID</th>
+                <th scope="col">Avatar</th>
                 <th scope="col">Nome</th>
+                <th scope="col">Tipo</th>
                 <th scope="col">Ações</th>
             </tr>
         </thead>
@@ -32,7 +34,14 @@ Cadastro de Usuários
     
             <tr>
                 <th scope="row">{{ usuario.id }}</th>
+                <td>
+                       
+                    <img src="{{url_for('avatar',nome_arquivo=usuario.avatar)}}" class="img-thumbnail"
+                        style="max-width: 80px; max-width: 80px;" alt="...">
+                    
+                </td>
                 <td>{{usuario.nome}}</td>
+                <td>{{usuario.tipo}}</td>
                 <td>
                     <a class="btn btn-danger" href="/usuarios/excluirUsuario/{{usuario.id}}">Excluir</a>
                

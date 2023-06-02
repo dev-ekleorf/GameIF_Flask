@@ -24,9 +24,10 @@ Meu Perfil
 <div class="container">
     <h2>Informações do Usuário</h2>
     <div>
-        <img src="{{url_for('logos',nome_arquivo=usuario.avatar)}}" class="img-thumbnail"
+        <img src="{{url_for('avatar',nome_arquivo=usuario.avatar)}}" class="img-thumbnail"
                         style="max-width: 80px; max-width: 80px; filter: grayscale(1);"  alt="Avatar do Usuário" >
         <h4>Nome do Usuário: {{usuario.nome}}</h4>
+        <h4>Email do Usuário: {{usuario.email}}</h4>
         <h4>Tipo: {{usuario.tipo}}</h4>
     </div>
 </div>
