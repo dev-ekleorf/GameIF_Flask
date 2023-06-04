@@ -1,12 +1,12 @@
 {% extends "base_aluno.html" %}
 <script src="{{ asset('js/bootstrap-datepicker.min.js')}}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-jSNn6HBA0eqm6fGqq+0FTqvdVHKUqgDYhyf4URvhs9Z1T8h+02+O/D6LEd9o2JgD1zGv0pDyxyAUKRqI1THjFg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 {% block title %}
 Sala {{sala_selecionada.nome}}
 {% endblock %}
 
 {% block content %}
-
-
 {% with messages = get_flashed_messages() %}
 {% if messages %}
 <ul class=flashes>
@@ -23,9 +23,8 @@ Sala {{sala_selecionada.nome}}
         <div class="col-lg-12 d-flex justify-content-between">
             <h1 class="page-header">{{sala_selecionada.nome}}</h1>
 
-            <div id="gamificação">
-                <img src="{{url_for('logos',nome_arquivo=sala_selecionada.logo)}}" class="img-thumbnail"
-                    style="max-width: 80px; max-width: 80px; filter: grayscale(1);" alt="...">
+            <div id="gamificação" class="p-3 mb-4 rounded" style="background-color: #f7f7f7;">
+                <img src="{{url_for('logos',nome_arquivo=sala_selecionada.logo)}}" class="img-thumbnail" style="max-width: 80px; max-height: 80px; filter: grayscale(1);" alt="...">
                 <h1 class="page-header">Pontuação: 0 | {{pontuacao}}</h1>
                 <h1 class="page-header">Ranking:   &nbsp;&nbsp;&nbsp; 9° | 20</h1>
             </div>
@@ -40,36 +39,45 @@ Sala {{sala_selecionada.nome}}
         <div class="accordion-item">
           <h2 class="accordion-header" id={{tarefa.id}}>
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_{{tarefa.id}}" aria-expanded="true" aria-controls="collapse_{{tarefa.id}}">
-              {{tarefa.nome}}
+              <span class="task-icon">
+                {% if tarefa.tipo == "envio-arquivo" %}
+                    <i class="fa fa-file"></i>
+                {% elif tarefa.tipo == "resposta-longa" %}
+                    <i class="fa fa-pencil"></i>
+                {% elif tarefa.tipo == "resposta-curta" %}
+                    <i class="fa fa-comment"></i>
+                {% endif %}
+              </span>
+              <span class="task-name">{{tarefa.nome}}</span>
             </button>
           </h2>
           <div id="collapse_{{tarefa.id}}" class="accordion-collapse collapse" aria-labelledby={{tarefa.id}} data-bs-parent="#accordionExample">
             <div class="accordion-body">
-              <strong>{{tarefa.descricao}}</strong> 
+              <strong class="task-description">{{tarefa.descricao}}</strong> 
               {% if tarefa.tipo == "envio-arquivo" %}
-              <form>
+              <form id="atividade_{{tarefa.id}}" class="form" action="/aluno/resolve_atividade/{{tarefa.id}}" method="post">
                 <div class="form-group m-2">
                   <label class="form-label" for="customFile">Envie a foto</label>
-                  <input type="file" class="form-control" id="customFile" />
+                  <input type="file" class="form-control" id="resposta" name="resposta" />
                 </div>
-                <button type="submit" class="btn btn-primary align-items-end flex-column">Enviar</button>
+                <button type="submit" class="btn btn-primary mt-2"><i class="fa fa-upload"></i> Enviar</button>
               </form>
                 
               {% elif tarefa.tipo == "resposta-longa" %}
-              <form>
+              <form id="atividade_{{tarefa.id}}" class="form" action="/aluno/resolve_atividade/{{tarefa.id}}" method="post">
                 <div class="form-group m-2">
-                  <label for="exampleFormControlTextarea1">Escreva sua Resposta</label>
-                  <textarea class="form-control" id="exampleFormControlTextarea1" rows="15"></textarea>
+                  <label for="exampleFormControlTextarea1"><i class="fa fa-pencil"></i> Escreva sua Resposta</label>
+                  <textarea class="form-control" id="resposta" name="resposta" rows="15"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary align-items-end flex-column">Enviar</button>
+                <button type="submit" class="btn btn-primary mt-2"><i class="fa fa-check"></i> Enviar</button>
               </form>
               {% elif tarefa.tipo == "resposta-curta" %}
-              <form>
+              <form id="atividade_{{tarefa.id}}" class="form" action="/aluno/resolve_atividade/{{tarefa.id}}" method="post">
                 <div class="form-group m-2">
-                  <label for="exampleFormControlTextarea1">Escreva sua Resposta</label>
-                  <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"></textarea>
+                  <label for="exampleFormControlTextarea1"><i class="fa fa-comment"></i> Escreva sua Resposta</label>
+                  <textarea class="form-control" id="resposta" name="resposta" rows="1"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary align-items-end flex-column">Enviar</button>
+                <button type="submit" class="btn btn-primary mt-2"><i class="fa fa-check"></i> Enviar</button>
               </form>
               {% endif %} 
             </div>
@@ -80,6 +88,24 @@ Sala {{sala_selecionada.nome}}
     </div>
 </div>
 
+<style>
+.task-icon {
+  margin-right: 10px;
+}
 
+.task-name {
+  font-weight: bold;
+}
+
+.task-description {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.accordion-button.collapsed .task-icon i {
+  transform: rotate(-90deg);
+}
+
+</style>
 
 {% endblock %}

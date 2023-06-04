@@ -67,7 +67,7 @@ Sala Professor
         
                 <tr>
                     <th scope="row">{{ atividade.id }}</th>
-                    <td>{{atividade.nome}}</td>
+                    <td><a class="nav-link" href="{{ url_for('professor.avaliar_atividade',id_atividade = atividade.id) }}">{{atividade.nome}}</a></td>
                     <td>{{atividade.descricao}}</td>
                     <td>{{atividade.tipo}}</td>
                     <td>

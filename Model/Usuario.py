@@ -7,5 +7,6 @@ class Usuario(db.Model):
     senha = db.Column(db.String, nullable=False)
     avatar = db.Column(db.String, nullable=True)
     tipo = db.Column(db.String, nullable=False)
+    respostas = db.relationship("Resposta", back_populates="usuario")
     salas = db.relationship('Sala',secondary="participacoes",back_populates="participantes")
 

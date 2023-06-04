@@ -12,3 +12,7 @@ class AtividadeDAO():
     def recupera_atividade(self,id):
         atividadeRecuperada = Atividade.query.get(id)
         return atividadeRecuperada
+
+    def grava_resposta(self,resposta):
+        db.session.add(resposta)
+        db.session.commit()

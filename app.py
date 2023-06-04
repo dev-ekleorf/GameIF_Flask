@@ -7,6 +7,7 @@ from aluno import aluno
 from admin import admin
 from flask_bcrypt import Bcrypt
 from helper.config import *
+from Model.Resposta import Resposta
 
 app = Flask(__name__)
 app.secret_key=b'gifkey#635jk8927'
@@ -33,6 +34,7 @@ db.init_app(app)
 def index():
     #db.drop_all()
     #db.create_all()
+    session.clear()
     return render_template("telaLogin.html")
 
 @app.route('/logos/<nome_arquivo>')

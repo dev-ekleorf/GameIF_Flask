@@ -99,3 +99,9 @@ def excluir_atividade(id_sala,id_atividade):
     atividadeDAO.remove_atividade(id_atividade)
     
     return redirect(url_for('professor.carregar_sala',id=id_sala))
+
+@professor.route("/avaliar_atividade/<int:id_atividade>")
+def avaliar_atividade(id_atividade):
+    atividadeDAO = AtividadeDAO()
+    atividade_selecionada = atividadeDAO.recupera_atividade(id_atividade)
+    return render_template("avaliacao_da_atividade.html",atividade_selecionada=atividade_selecionada)

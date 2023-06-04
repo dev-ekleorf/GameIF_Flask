@@ -87,11 +87,11 @@ def adicionarUsuario():
 
     usuarioDAO = UsuarioDAO()        
     usuarioDAO.adicionaUsuario(user)
-
-    if(session['tipo_usuario'] == "admin"):
-        return redirect(url_for('usuarios.principal'))
+    print("session: "+str(session))
+    if('tipo_usuario' in session):
+        if(session['tipo_usuario'] == "admin"):
+            return redirect(url_for('usuarios.principal'))
     return redirect("/")
-
 @usuarios.route("/tela_cadastro")
 def telaCadastro():
     return render_template("tela_cadastro.html")

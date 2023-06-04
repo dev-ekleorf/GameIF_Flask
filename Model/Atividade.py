@@ -7,6 +7,7 @@ class Atividade(db.Model):
     pontuacao = db.Column(db.Integer, nullable=False)
     tipo = db.Column(db.String, nullable=False)
     sala_id = db.Column(db.Integer, db.ForeignKey("sala.id"))
+    respostas = db.relationship("Resposta", back_populates="atividade")
   
     
     def getId(self):
