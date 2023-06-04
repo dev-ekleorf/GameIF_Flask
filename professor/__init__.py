@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import Blueprint
 from flask import render_template,redirect, url_for, request, session,send_from_directory
+from DAO.RespostaDAO import RespostaDAO
 from DAO.UsuarioDAO import UsuarioDAO
 from DAO.SalaDAO import SalaDAO
 from DAO.AtividadeDAO import AtividadeDAO
@@ -104,4 +105,16 @@ def excluir_atividade(id_sala,id_atividade):
 def avaliar_atividade(id_atividade):
     atividadeDAO = AtividadeDAO()
     atividade_selecionada = atividadeDAO.recupera_atividade(id_atividade)
+    return render_template("avaliacao_da_atividade.html",atividade_selecionada=atividade_selecionada)
+
+@professor.route("/atribuir_nota/<int:id_resposta>",methods=['POST'])
+def atribuir_nota(id_resposta):
+    print("Foi até aqui")
+    respostaDAO = RespostaDAO()
+    resposta_selecionada = respostaDAO.recupera_resposta(id_resposta)
+    resposta_selecionada.pontuacao_recebida = request.form['nota']
+    respostaDAO.grava_resposta(resposta_selecionada)
+    atividadeDAO = AtividadeDAO()
+    
+    atividade_selecionada = atividadeDAO.recupera_atividade(resposta_selecionada.atividade.id)
     return render_template("avaliacao_da_atividade.html",atividade_selecionada=atividade_selecionada)

@@ -5,7 +5,6 @@ Avaliar Atividade {{atividade_selecionada.id}}
 {% endblock %}
 
 {% block content %}
-
       
     {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -16,39 +15,40 @@ Avaliar Atividade {{atividade_selecionada.id}}
     </ul>
     {% endif %}
     {% endwith %}
-
    
     <h2>Lista de Respostas da Atividade: {{atividade_selecionada.id}} - {{atividade_selecionada.nome}}</h2>
+
     <table class="table">
         <thead>
             <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Nome Aluno</th>
                 <th scope="col">Resposta</th>
+                <th scope="col">Nota</th>
                 <th scope="col">Ações</th>
             </tr>
         </thead>
         <tbody>
             {% for resposta in atividade_selecionada.respostas %}
-    
+
             <tr>
                 <th scope="row">{{ resposta.id }}</th>
                 <td>{{resposta.usuario.nome}}</td>
                 <td>{{resposta.resposta}}</td>
                 <td>
+                    <form action="/professor/atribuir_nota/{{ resposta.id }}" method="post">
+                        <input type="number" name="nota" value="{{ resposta.pontuacao_recebida }}" min="0" max="{{atividade_selecionada.pontuacao}}">
+                        <button class="btn btn-primary" type="submit">Atribuir Nota</button>
+                    </form>
+                </td>
+                <td>
                     <a class="btn btn-danger" href="/professor/excluirResposta/{{resposta.id}}">Excluir</a>
-               
                     <a class="btn btn-danger" href="/professor/telaEditarResposta/{{resposta.id}}">Editar</a>
                 </td>
-
             </tr>
-            
+
             {% endfor %}
         </tbody>
-        
     </table>
  
-      
-
 {% endblock %}
-
