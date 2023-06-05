@@ -24,9 +24,12 @@ Sala {{sala_selecionada.nome}}
             <h1 class="page-header">{{sala_selecionada.nome}}</h1>
 
             <div id="gamificação" class="p-3 mb-4 rounded" style="background-color: #f7f7f7;">
-                <img src="{{url_for('logos',nome_arquivo=sala_selecionada.logo)}}" class="img-thumbnail" style="max-width: 80px; max-height: 80px; filter: grayscale(1);" alt="...">
-                <h1 class="page-header">Pontuação: 0 | {{pontuacao}}</h1>
-                <h1 class="page-header">Ranking:   &nbsp;&nbsp;&nbsp; 9° | 20</h1>
+                <div class="image-container">
+                  <img src="{{url_for('logos',nome_arquivo=sala_selecionada.logo)}}" class="img-thumbnail sala-logo grayscale-image" style="max-width: 200px; max-height: 200px;" alt="Logo da Sala">
+                  <img src="{{url_for('logos',nome_arquivo=sala_selecionada.logo)}}" class="img-thumbnail sala-logo color-image" style="max-width: 200px; max-height: 200px; mix-blend-mode: multiply; position: absolute; top: 0; left: 0;" alt="Logo da Sala">
+                </div>
+                <h1 class="page-header">Pontuação: {{pontuacao_aluno}} | {{pontuacao_sala}}</h1>
+                <h1 class="page-header">Ranking:   &nbsp;&nbsp;&nbsp; {{posicao_no_ranking}} | {{sala_selecionada.participantes|count-1}}</h1>
             </div>
         </div>
     </div>
@@ -106,6 +109,31 @@ Sala {{sala_selecionada.nome}}
   transform: rotate(-90deg);
 }
 
+.image-container {
+  position: relative;
+}
+
+.grayscale-image {
+  filter: grayscale(1);
+}
+
+.color-image {
+  clip-path: polygon(0 0, 0 100%, 0 100%, 0 0); /* Inicialmente, a imagem colorida está completamente escondida */
+}
+
 </style>
+
+<script>
+  var porcentagemColorida = '{{porcentagem_preencher_imagem}}'; 
+
+  var imageContainer = document.querySelector(".image-container");
+  var grayscaleImage = document.querySelector(".grayscale-image");
+  var colorImage = document.querySelector(".color-image");
+
+  grayscaleImage.style.clipPath = "polygon(" + porcentagemColorida + "% 0, 100% 0, 100% 100%, " + porcentagemColorida + "% 100%)";
+  colorImage.style.clipPath = "polygon(0 0, " + porcentagemColorida + "% 0, " + porcentagemColorida + "% 100%, 0 100%)";
+  
+
+</script>
 
 {% endblock %}

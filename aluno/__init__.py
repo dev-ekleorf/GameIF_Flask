@@ -50,8 +50,14 @@ def sair_da_sala(id_sala):
 def carregar_sala(id):
     salaDAO = SalaDAO()
     sala_selecionada = salaDAO.recuperaSala(id)
-    pontuacao = sum(atividade.pontuacao for atividade in sala_selecionada.atividades)
-    return render_template("sala_aluno.html",sala_selecionada=sala_selecionada,pontuacao=pontuacao)
+    pontuacao_sala = sum(atividade.pontuacao for atividade in sala_selecionada.atividades)
+    aluno_id = session['usuarioLogado']
+    pontuacao_aluno = UsuarioDAO.calcular_pontuacao_total_aluno(aluno_id,sala_selecionada.id)
+    ranking =UsuarioDAO.gerar_ranking(id)
+    posicao_no_ranking = UsuarioDAO.obter_posicao_aluno(ranking,aluno_id)
+    porcentagem_preencher_imagem = (pontuacao_aluno*100)/pontuacao_sala
+    print("porcentagem_preencher_imagem: "+str(porcentagem_preencher_imagem))
+    return render_template("sala_aluno.html",sala_selecionada=sala_selecionada,pontuacao_aluno=pontuacao_aluno,pontuacao_sala=pontuacao_sala,posicao_no_ranking=posicao_no_ranking,porcentagem_preencher_imagem=porcentagem_preencher_imagem)
 
 @aluno.route("/resolve_atividade/<int:atividade_id>",methods=['POST'])
 def resolve_atividade(atividade_id):
