@@ -8,13 +8,14 @@ from admin import admin
 from flask_bcrypt import Bcrypt
 from helper.config import *
 from Model.Resposta import Resposta
+import os
 
 app = Flask(__name__)
 app.secret_key=b'gifkey#635jk8927'
 bcrypt = Bcrypt(app)
 
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost:5432/gameif_db'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://qsxgbccqjiazsv:b9a9499d425c60f72ea46a58ee18a660b2569fe1962ea3c47240fd3f7f66d798@ec2-3-232-103-50.compute-1.amazonaws.com:5432/d7msgne8u0hce3'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 participacoes = db.Table('participacoes',
