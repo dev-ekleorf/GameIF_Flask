@@ -9,6 +9,7 @@ from flask_bcrypt import Bcrypt
 from helper.config import *
 from Model.Resposta import Resposta
 import os
+from sqlalchemy import create_engine
 
 app = Flask(__name__)
 app.secret_key=b'gifkey#635jk8927'
@@ -16,6 +17,7 @@ bcrypt = Bcrypt(app)
 
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost:5432/gameif_db'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+db = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 participacoes = db.Table('participacoes',
