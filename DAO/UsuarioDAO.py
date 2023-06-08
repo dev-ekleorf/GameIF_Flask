@@ -1,6 +1,9 @@
+from Model.Atividade import Atividade
+from Model.Resposta import Resposta
 from Model.Usuario import Usuario
 from helper.config import *
 from flask_bcrypt import Bcrypt
+from sqlalchemy import func,desc
 
 bcrypt = Bcrypt()
 class UsuarioDAO:
@@ -12,7 +15,7 @@ class UsuarioDAO:
         db.session.add(usuario)
         db.session.commit()
     
-    def listarUsuarios(self):
+    def listarUsuarios():
         vetUsuarios = Usuario.query.all()
         return vetUsuarios
 
@@ -47,3 +50,45 @@ class UsuarioDAO:
     def recuperaUsuario(self,id):
         usuarioRecuperado = Usuario.query.get(id)
         return usuarioRecuperado
+
+
+    def calcular_pontuacao_total_aluno(aluno_id, sala_id):
+        pontuacao_total = db.session.query(func.sum(Resposta.pontuacao_recebida)).\
+            join(Resposta.atividade).\
+            filter(Resposta.usuario_id == aluno_id, Atividade.sala_id == sala_id).scalar()
+
+        return pontuacao_total or 0
+    
+    from sqlalchemy import desc
+
+    def gerar_ranking(sala_id):
+        # Consulta as pontuações dos alunos da sala específica
+        pontuacoes = db.session.query(Usuario.id, Usuario.nome, func.sum(Resposta.pontuacao_recebida).label('pontuacao_total')).\
+            join(Usuario.respostas).\
+            join(Resposta.atividade).\
+            filter(Atividade.sala_id == sala_id).\
+            group_by(Usuario.id, Usuario.nome).\
+            order_by(desc('pontuacao_total')).all()
+
+        # Cria uma lista de dicionários contendo as informações de cada aluno no ranking
+        ranking = []
+        posicao = 1
+        for aluno_id, aluno_nome, pontuacao_total in pontuacoes:
+            aluno_info = {
+                'posicao': posicao,
+                'aluno_id': aluno_id,
+                'aluno_nome': aluno_nome,
+                'pontuacao_total': pontuacao_total
+            }
+            ranking.append(aluno_info)
+            posicao += 1
+
+        print("ranking: "+str(ranking))
+        return ranking
+    
+    def obter_posicao_aluno(ranking, aluno_id):
+        for aluno_info in ranking:
+            if aluno_info['aluno_id'] == aluno_id:
+                return aluno_info['posicao']
+        return "Fora do Ranking"
+

@@ -1,0 +1,139 @@
+{% extends "base_aluno.html" %}
+<script src="{{ asset('js/bootstrap-datepicker.min.js')}}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-jSNn6HBA0eqm6fGqq+0FTqvdVHKUqgDYhyf4URvhs9Z1T8h+02+O/D6LEd9o2JgD1zGv0pDyxyAUKRqI1THjFg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+{% block title %}
+Sala {{sala_selecionada.nome}}
+{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class=flashes>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 d-flex justify-content-between">
+            <h1 class="page-header">{{sala_selecionada.nome}}</h1>
+
+            <div id="gamificação" class="p-3 mb-4 rounded" style="background-color: #f7f7f7;">
+                <div class="image-container">
+                  <img src="{{url_for('logos',nome_arquivo=sala_selecionada.logo)}}" class="img-thumbnail sala-logo grayscale-image" style="max-width: 200px; max-height: 200px;" alt="Logo da Sala">
+                  <img src="{{url_for('logos',nome_arquivo=sala_selecionada.logo)}}" class="img-thumbnail sala-logo color-image" style="max-width: 200px; max-height: 200px; mix-blend-mode: multiply; position: absolute; top: 0; left: 0;" alt="Logo da Sala">
+                </div>
+                <h1 class="page-header">Pontuação: {{pontuacao_aluno}} | {{pontuacao_sala}}</h1>
+                <h1 class="page-header">Ranking:   &nbsp;&nbsp;&nbsp; {{posicao_no_ranking}} | {{sala_selecionada.participantes|count-1}}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+   <div class="accordion" id="accordionExample">
+        {% for tarefa in sala_selecionada.atividades %}
+        <div class="accordion-item">
+          <h2 class="accordion-header" id={{tarefa.id}}>
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_{{tarefa.id}}" aria-expanded="true" aria-controls="collapse_{{tarefa.id}}">
+              <span class="task-icon">
+                {% if tarefa.tipo == "envio-arquivo" %}
+                    <i class="fa fa-file"></i>
+                {% elif tarefa.tipo == "resposta-longa" %}
+                    <i class="fa fa-pencil"></i>
+                {% elif tarefa.tipo == "resposta-curta" %}
+                    <i class="fa fa-comment"></i>
+                {% endif %}
+              </span>
+              <span class="task-name">{{tarefa.nome}}</span>
+            </button>
+          </h2>
+          <div id="collapse_{{tarefa.id}}" class="accordion-collapse collapse" aria-labelledby={{tarefa.id}} data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <strong class="task-description">{{tarefa.descricao}}</strong> 
+              {% if tarefa.tipo == "envio-arquivo" %}
+              <form id="atividade_{{tarefa.id}}" class="form" action="/aluno/resolve_atividade/{{tarefa.id}}" method="post">
+                <div class="form-group m-2">
+                  <label class="form-label" for="customFile">Envie a foto</label>
+                  <input type="file" class="form-control" id="resposta" name="resposta" />
+                </div>
+                <button type="submit" class="btn btn-primary mt-2"><i class="fa fa-upload"></i> Enviar</button>
+              </form>
+                
+              {% elif tarefa.tipo == "resposta-longa" %}
+              <form id="atividade_{{tarefa.id}}" class="form" action="/aluno/resolve_atividade/{{tarefa.id}}" method="post">
+                <div class="form-group m-2">
+                  <label for="exampleFormControlTextarea1"><i class="fa fa-pencil"></i> Escreva sua Resposta</label>
+                  <textarea class="form-control" id="resposta" name="resposta" rows="15"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2"><i class="fa fa-check"></i> Enviar</button>
+              </form>
+              {% elif tarefa.tipo == "resposta-curta" %}
+              <form id="atividade_{{tarefa.id}}" class="form" action="/aluno/resolve_atividade/{{tarefa.id}}" method="post">
+                <div class="form-group m-2">
+                  <label for="exampleFormControlTextarea1"><i class="fa fa-comment"></i> Escreva sua Resposta</label>
+                  <textarea class="form-control" id="resposta" name="resposta" rows="1"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2"><i class="fa fa-check"></i> Enviar</button>
+              </form>
+              {% endif %} 
+            </div>
+          </div>
+        </div>
+      
+      {% endfor %}
+    </div>
+</div>
+
+<style>
+.task-icon {
+  margin-right: 10px;
+}
+
+.task-name {
+  font-weight: bold;
+}
+
+.task-description {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.accordion-button.collapsed .task-icon i {
+  transform: rotate(-90deg);
+}
+
+.image-container {
+  position: relative;
+}
+
+.grayscale-image {
+  filter: grayscale(1);
+}
+
+.color-image {
+  clip-path: polygon(0 0, 0 100%, 0 100%, 0 0); /* Inicialmente, a imagem colorida está completamente escondida */
+}
+
+</style>
+
+<script>
+  var porcentagemColorida = '{{porcentagem_preencher_imagem}}'; 
+
+  var imageContainer = document.querySelector(".image-container");
+  var grayscaleImage = document.querySelector(".grayscale-image");
+  var colorImage = document.querySelector(".color-image");
+
+  grayscaleImage.style.clipPath = "polygon(" + porcentagemColorida + "% 0, 100% 0, 100% 100%, " + porcentagemColorida + "% 100%)";
+  colorImage.style.clipPath = "polygon(0 0, " + porcentagemColorida + "% 0, " + porcentagemColorida + "% 100%, 0 100%)";
+  
+
+</script>
+
+{% endblock %}

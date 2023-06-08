@@ -6,7 +6,8 @@ class Sala(db.Model):
     logo = db.Column(db.String, nullable=True)
     descricao = db.Column(db.String, nullable=True)
     atividades = db.relationship("Atividade")
-    #participantes = db.relationship('Usuarios', secondary="Usuario_participa_sala", backref='salas')
+    participantes = db.relationship('Usuario', secondary="participacoes", back_populates='salas')
+    
         
     def getId(self):
         return self.__id

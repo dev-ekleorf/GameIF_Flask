@@ -1,0 +1,96 @@
+{% extends "base_professor.html" %}
+<script src="{{ asset('js/bootstrap-datepicker.min.js')}}"></script>
+{% block title %}
+Sala Professor
+{% endblock %}
+
+{% block content %}
+
+      
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+        <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+   
+    <h2>{{sala_selecionada.nome}}</h2>
+    <div id="participantes">
+        <h2>Participantes</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Avatar</th>
+                    <th scope="col">Nome</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for participante in sala_selecionada.participantes %}
+        
+                <tr>
+                    <th scope="row">{{ participante.id }}</th>
+                    <td>
+                       
+                        <img src="{{url_for('avatar',nome_arquivo=participante.avatar)}}" class="img-thumbnail"
+                            style="max-width: 80px; max-width: 80px;" alt="...">
+                        
+                    </td>
+                    <td>{{participante.nome}}</td>
+    
+                </tr>
+                
+                {% endfor %}
+            </tbody>
+            
+        </table>
+    </div>
+
+    <div id="atividades">
+        <h2>Atividades</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Excluir</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for atividade in sala_selecionada.atividades %}
+        
+                <tr>
+                    <th scope="row">{{ atividade.id }}</th>
+                    <td><a class="nav-link" href="{{ url_for('professor.avaliar_atividade',id_atividade = atividade.id) }}">{{atividade.nome}}</a></td>
+                    <td>{{atividade.descricao}}</td>
+                    <td>{{atividade.tipo}}</td>
+                    <td>
+                        <a class="btn btn-danger" href="/professor/excluir_atividade/{{sala_selecionada.id}}/{{atividade.id}}">Excluir</a>
+                    </td>
+                    
+                </tr>
+                
+                {% endfor %}
+            </tbody>
+            
+        </table>
+    </div>
+ 
+    <div class="row mx-5 my-5">
+        <div class="col">
+        </div>
+        <div class="col-auto">
+          <a class="btn btn-primary pull-right" href="/professor/tela_criar_atividade/{{sala_selecionada.id}}">Adicionar Atividade</a>
+        </div>
+      </div>
+
+      
+
+{% endblock %}
+

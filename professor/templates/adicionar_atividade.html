@@ -1,0 +1,59 @@
+{% extends "base_professor.html" %}
+<script src="{{ asset('js/bootstrap-datepicker.min.js')}}"></script>
+
+{% block title %}
+Adicionar Atividade
+{% endblock %}
+
+{% block content %}
+
+      
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+        <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+    <h2>Nova atividade: {{id_sala}}</h2>
+    <form class="row g-3" action="/professor/adicionar_atividade/{{id_sala}}" method="post" name="formularioAdicionarAtividade" enctype=multipart/form-data>
+        <div class="col-md-12">
+            <label for="nome_atividade" class="form-label">Nome
+                <span class="text-danger font-weight-bold">*</span>
+            </label>
+            <input type="text" name="nome_atividade" class="form-control" id="titulo" required>
+        </div>
+        <div class="col-md-12">
+            <label for="descricao" class="form-label">Descrição
+                <span class="text-danger font-weight-bold">*</span>
+            </label>
+            <input type="text" name="descricao" class="form-control" id="descricao" required>
+        </div>
+        <div class="col-md-12">
+            <label for="descricao" class="form-label">Pontuação
+                <span class="text-danger font-weight-bold">*</span>
+            </label>
+            <input type="text" name="pontuacao" class="form-control" id="pontuacao" required>
+        </div>
+        <div class="col-md-12">
+            <label>Tipo de Atividade:</label><br>
+            <input type="radio" id="envio-arquivo" name="tipo_atividade" value="envio-arquivo">
+            <label for="envio-arquivo">Envio de Arquivo</label><br>
+
+            <input type="radio" id="resposta-longa" name="tipo_atividade" value="resposta-longa">
+            <label for="resposta-longa">Resposta Longa</label><br>
+
+            <input type="radio" id="resposta-curta" name="tipo_atividade" value="resposta-curta">
+            <label for="resposta-curta">Resposta Curta</label><br><br>
+        </div>
+
+
+        <button type="submit" class="btn btn-primary my-5" onclick="validarAdicionarAtividade()"
+            name="Adicionar">Adicionar Atividade</button>
+    </form>
+
+{% endblock %}
+

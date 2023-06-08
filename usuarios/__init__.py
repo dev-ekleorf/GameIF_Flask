@@ -6,6 +6,7 @@ from DAO.SalaDAO import SalaDAO
 from Model.Usuario import Usuario
 from flask import json, jsonify
 from flask_bcrypt import Bcrypt
+import datetime
 
 from Model.Sala import Sala
 from Model.Atividade import Atividade
@@ -21,7 +22,6 @@ def login():
     login = request.form['login']
     senha = request.form['senha']
     print("Login: "+login)
-    print("senha: "+senha)
 
     usuario_logado = Usuario()
     usuario_logado = UsuarioDAO.validaLogin(login,senha)
@@ -31,38 +31,30 @@ def login():
     else:
         session['usuarioLogado'] = usuario_logado.id
         session['tipo_usuario'] = usuario_logado.tipo
-        salas = SalaDAO.recupera_salas_usuario(usuario_logado.id)
-        if(usuario_logado.tipo == "professor"):
-            return render_template("principal_professor.html",arraySalas=salas)
-        elif(usuario_logado.tipo == "aluno"):
-            print("Vai para a tela de Principal Aluno")
-            for sala in salas:
-                print(sala.nome)
-            return render_template("principal_aluno.html",arraySalas=salas)
-        elif(usuario_logado.tipo == "administrador"):
-            return render_template("principal_administrador.html")
-    return redirect("/")
+        return redirect(url_for('usuarios.principal'))
 
-@usuarios.route('/principal/<int:id>')
-def principal(id):
 
-    atividade1 = Atividade(1,"Atividade 1","Envie uma foto do livro x")
-    atividade2 = Atividade(1,"Atividade 2","Fale sobre o livro x")
-    array_atividades = []
-    array_atividades.append(atividade1)
-    array_atividades.append(atividade2)
-    sala = Sala(1,"Projeto de Leitura","","livros.webp",array_atividades,"")
-    arraySalas = []
-    arraySalas.append(sala)
-    sala2 = Sala(1,"Eletrônica","","arduino.jfif",array_atividades,"")
-    arraySalas.append(sala2)
-    print(sala.getNome())
-    return render_template("principal_aluno.html",arraySalas = arraySalas)
+@usuarios.route('/principal')
+def principal():
+    id_usuario = session['usuarioLogado']
+    usuarioDAO = UsuarioDAO()
+    usuario_logado = usuarioDAO.recuperaUsuario(id_usuario)
+    salaDAO = SalaDAO()
+    arraySalas = salaDAO.recupera_salas_usuario(usuario_logado)
+    salas = salaDAO.recupera_salas_usuario(usuario_logado)
+    if(usuario_logado.tipo == "professor"):
+        return redirect(url_for('professor.principal'))
+    elif(usuario_logado.tipo == "aluno"):
+        return render_template("principal_aluno.html",arraySalas=arraySalas)
+    elif(usuario_logado.tipo == "admin"):
+        usuarios = UsuarioDAO.listarUsuarios()
+        return render_template("principal_administrador.html",usuarios=usuarios)
 
 @usuarios.route('/listar_usuarios') 
 def listar_usuarios():
     try: 
-        print("")
+        usuarios = UsuarioDAO.listarUsuarios()
+        return render_template("principal_administrador.html",usuarios=usuarios)
     except Exception as e: 
         return f"Ocorreu um erro: {e}"
 
@@ -72,39 +64,38 @@ def adicionarUsuario():
     
     usuario = request.form['usuario']
     senha = str(bcrypt.generate_password_hash(request.form['senha']).decode('utf-8'))
-    print("usuarioform: "+usuario)
-    print("senhaform: "+senha)
+    email = request.form['email']
+    avatar = request.files['avatar_usuario']
+    tipo_usuario = request.form['tipo-usuario']
 
-    user = Usuario(nome=usuario,senha=senha,tipo="aluno")
-    
-    print("usuariomodel: "+user.nome)
-    print("senhamodel: "+user.senha)
-    usuarioDAO = UsuarioDAO()    
-    
+    if(avatar.filename == ""):
+        dataSave = ""
+        endereco_arquivo="avatar.jpg"
+    else:    
+        dataSave = datetime.datetime.now().strftime('%d%m%Y%H%M%S')
+        print(dataSave)
+        avatar.save(f'avatar/{dataSave}_{avatar.filename}')
+        endereco_arquivo = dataSave+'_'+avatar.filename
+
+    print("usuario: "+usuario)
+    print("senha: "+senha)
+    print("email: "+email)
+    print("tipo_usuario: "+tipo_usuario)
+    print("avatar: "+endereco_arquivo)
+
+    user = Usuario(nome=usuario,senha=senha,email=email,tipo=tipo_usuario,avatar=endereco_arquivo)
+
+    usuarioDAO = UsuarioDAO()        
     usuarioDAO.adicionaUsuario(user)
-
+    print("session: "+str(session))
+    if('tipo_usuario' in session):
+        if(session['tipo_usuario'] == "admin"):
+            return redirect(url_for('usuarios.principal'))
     return redirect("/")
-
 @usuarios.route("/tela_cadastro")
 def telaCadastro():
     return render_template("tela_cadastro.html")
 
-@usuarios.route("/cadastrarUsuario",methods=['POST'])
-def cadastrarUsuario():
-    usuario = request.form['usuario']
-    #senha = str(bcrypt.generate_password_hash(request.form['senha']).decode('utf-8'))
-    print("usuario: "+usuario)
-    #print("senha: "+senha)
-
-    #user = Usuario("",usuario,senha)
-    #print("usuariomodel: "+user.nome)
-    #print("senhamodel: "+user.senha)
-
-    #usuarioDAO = UsuarioDAO()    
-    
-    #usuarioDAO.adicionaUsuario(user)
-
-    return redirect("/")
 
 @usuarios.route("/telaAdicionarUsuario")
 def telaAdicionarUsuario():
@@ -112,26 +103,54 @@ def telaAdicionarUsuario():
 
 @usuarios.route("/excluirUsuario/<int:id>")
 def excluirUsuario(id):
-    #usuarioDAO = UsuarioDAO()
-    #usuarioDAO.removeUsuario(id)
-    return redirect(url_for('usuarios.listarUsuarios'))
+    usuarioDAO = UsuarioDAO()
+    usuarioDAO.removeUsuario(id)
+    return redirect(url_for('usuarios.listar_usuarios'))
 
 @usuarios.route("/telaEditarUsuario/<int:id>")
 def telaEditarUsuario(id):
     print("telaEditarFilme: Id: "+str(id))
-    #usuarioDAO = UsuarioDAO()
-    usuarioRecuperado = ""#usuarioDAO.recuperaUsuario(id)
-    return render_template("editarUsuario.html",usuarioRecuperado=usuarioRecuperado)
+    usuarioDAO = UsuarioDAO()
+    usuarioRecuperado = usuarioDAO.recuperaUsuario(id)
+    return render_template("editarUsuario.html",usuario=usuarioRecuperado)
 
 @usuarios.route("/editarUsuario/<int:id>",methods=['POST'])
 def editarUsuario(id):
     print("Editar Usuario!")
-    #usuarioDAO = UsuarioDAO()
-    #usuario = usuarioDAO.recuperaUsuario(id)
-    #usuario.nome = request.form['nome']
-    #usuario.senha = str(bcrypt.generate_password_hash(request.form['senha']).decode('utf-8'))
-    #usuarioDAO.editarUsuario(usuario)
-    return redirect(url_for('usuarios.listarUsuarios'))
+    nome = request.form['usuario']
+    senha = str(bcrypt.generate_password_hash(request.form['senha']).decode('utf-8'))
+    email = request.form['email']
+    avatar = request.files['avatar_usuario']
+    tipo_usuario = request.form['tipo-usuario']
+
+    if(avatar.filename == ""):
+        dataSave = ""
+        endereco_arquivo="avatar.jpg"
+    else:    
+        dataSave = datetime.datetime.now().strftime('%d%m%Y%H%M%S')
+        print(dataSave)
+        avatar.save(f'avatar/{dataSave}_{avatar.filename}')
+        endereco_arquivo = dataSave+'_'+avatar.filename
+
+    print("usuario: "+nome)
+    print("senha: "+senha)
+    print("email: "+email)
+    print("tipo_usuario: "+tipo_usuario)
+    print("avatar: "+endereco_arquivo)
+
+    usuarioDAO = UsuarioDAO()        
+    usuario =usuarioDAO.recuperaUsuario(id)
+    usuario.nome = nome
+    usuario.senha = senha
+    usuario.email = email
+    usuario.avatar = endereco_arquivo
+    usuario.tipo = tipo_usuario
+
+    usuarioDAO.editarUsuario(usuario)
+
+   
+    return redirect(url_for('usuarios.principal'))
+   
 
 
 @usuarios.route("/logout")
@@ -154,6 +173,12 @@ def recuperaUsuarios():
 def meu_perfil():
     print("Meu Perfil")
     #busca usuário por ID
-    usuario = Usuario(session['usuarioLogado'],"Erik","teste")
+    id_usuario = session['usuarioLogado']
+    usuarioDAO = UsuarioDAO()
+    usuario = usuarioDAO.recuperaUsuario(id_usuario)
     print(usuario)
     return render_template("meu_perfil.html",usuario=usuario)
+
+@usuarios.route("/minhas_salas")
+def minhas_salas():
+        return redirect(url_for('usuarios.principal'))
