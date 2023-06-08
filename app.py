@@ -10,6 +10,8 @@ from helper.config import *
 from Model.Resposta import Resposta
 import os
 from sqlalchemy import create_engine
+import psycopg2
+
 
 app = Flask(__name__)
 app.secret_key=b'gifkey#635jk8927'
