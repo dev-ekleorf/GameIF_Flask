@@ -37,8 +37,8 @@ db.init_app(app)
 
 @app.route("/")
 def index():
-    #db.drop_all()
-    #db.create_all()
+    db.drop_all()
+    db.create_all()
     session.clear()
     return render_template("telaLogin.html")
 
