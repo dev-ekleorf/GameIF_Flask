@@ -18,8 +18,8 @@ app = Flask(__name__)
 app.secret_key=b'gifkey#635jk8927'
 bcrypt = Bcrypt(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost:5432/gameif_db'
-#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost:5432/gameif_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 participacoes = db.Table('participacoes',
@@ -38,8 +38,8 @@ db.init_app(app)
 
 @app.route("/")
 def index():
-    db.drop_all()
-    db.create_all()
+    #db.drop_all()
+    #db.create_all()
     session.clear()
     messages = get_flashed_messages()  # Obter as flash messages
     return render_template("tela_login.html", messages=messages)
