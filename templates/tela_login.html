@@ -1,0 +1,47 @@
+{% extends "base_inicial.html" %}
+
+{% block title %}
+    GameIF Login
+{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class="flash-messages">
+            {% for message in messages %}
+                <li class="flash-message">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+    <div id="login">
+        <div class="container">
+            <div id="login-row" class="row justify-content-center align-items-center">
+                <div id="login-column" class="col-md-6">
+                    <div id="login-box" class="col-md-12">
+                        <form id="login-form" class="form" action="/usuarios/login" method="post">
+                            <img src="{{url_for('logos',nome_arquivo='logo_gameIF.jpeg')}}" class="img-fluid" alt="Logo da Plataforma GameIF.">
+
+                            <div class="m-1">
+                                <label for="login" class="text-info text-center">GameIF: Plataforma para criação de salas gamificadas para aplicações em diferentes contextos de aprendizagem</label><br>
+                            </div>
+                            <div class="form-group">
+                                <label for="login" class="text-info">E-mail:</label><br>
+                                <input type="email" name="login" id="login" class="form-control" required title="Por favor, insira um endereço de e-mail válido">
+                            </div>
+                            <div class="form-group">
+                                <label for="password" class="text-info">Senha:</label><br>
+                                <input type="password" name="senha" id="senha" class="form-control" required>
+                            </div>
+
+                            <div id="register-link" class="text-right mb-3">
+                                <a href="/usuarios/tela_cadastro" class="text-info">Faça seu Cadastro</a>
+                            </div>
+                            <input type="submit" class="btn btn-success btn-lg btn-block" value="Entrar">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

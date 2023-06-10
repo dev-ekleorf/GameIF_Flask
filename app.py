@@ -11,14 +11,15 @@ from Model.Resposta import Resposta
 import os
 from sqlalchemy import create_engine
 import psycopg2
+from flask import flash
 
 
 app = Flask(__name__)
 app.secret_key=b'gifkey#635jk8927'
 bcrypt = Bcrypt(app)
 
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost:5432/gameif_db'
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost:5432/gameif_db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 participacoes = db.Table('participacoes',
@@ -40,7 +41,8 @@ def index():
     #db.drop_all()
     #db.create_all()
     session.clear()
-    return render_template("telaLogin.html")
+    messages = get_flashed_messages()  # Obter as flash messages
+    return render_template("tela_login.html", messages=messages)
 
 @app.route('/logos/<nome_arquivo>')
 def logos(nome_arquivo):

@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import flash
 from flask import Blueprint
 from flask import render_template,redirect, url_for, request, session,send_from_directory
 from DAO.UsuarioDAO import UsuarioDAO
@@ -26,8 +26,9 @@ def login():
     usuario_logado = Usuario()
     usuario_logado = UsuarioDAO.validaLogin(login,senha)
     if(usuario_logado == False):
-        print("Falha ao logar")
-        return redirect("/")
+        print("Falha ao logar!")
+        flash('Falha no Login. E-mail ou senha incorretos.', 'error')
+        return redirect(url_for('index'))
     else:
         session['usuarioLogado'] = usuario_logado.id
         session['tipo_usuario'] = usuario_logado.tipo
@@ -59,11 +60,13 @@ def listar_usuarios():
         return f"Ocorreu um erro: {e}"
 
 
-@usuarios.route("/adicionarUsuario",methods=['POST'])
+@usuarios.route("/adicionar_usuario",methods=['POST'])
 def adicionarUsuario():
     
-    usuario = request.form['usuario']
-    senha = str(bcrypt.generate_password_hash(request.form['senha']).decode('utf-8'))
+    usuario = request.form['nome']
+    apelido = request.form['apelido']
+    senha = request.form['senha']
+    confirme_senha = request.form['confirme-senha']
     email = request.form['email']
     avatar = request.files['avatar_usuario']
     tipo_usuario = request.form['tipo-usuario']
@@ -78,12 +81,21 @@ def adicionarUsuario():
         endereco_arquivo = dataSave+'_'+avatar.filename
 
     print("usuario: "+usuario)
+    print("apelido: "+apelido)
     print("senha: "+senha)
+    print("confirme-senha: "+confirme_senha)
     print("email: "+email)
     print("tipo_usuario: "+tipo_usuario)
     print("avatar: "+endereco_arquivo)
 
-    user = Usuario(nome=usuario,senha=senha,email=email,tipo=tipo_usuario,avatar=endereco_arquivo)
+    if(senha != confirme_senha):
+        print("Senhas não conferem durante a criação do usuário.")
+        flash('Falha na confirmação de senha, durante a criação do usuário.', 'error')
+        return redirect(url_for('usuarios.tela_cadastro'))
+    else:
+        senha = str(bcrypt.generate_password_hash(senha).decode('utf-8'))
+
+    user = Usuario(nome=usuario,apelido=apelido,senha=senha,email=email,tipo=tipo_usuario,avatar=endereco_arquivo)
 
     usuarioDAO = UsuarioDAO()        
     usuarioDAO.adicionaUsuario(user)
@@ -92,8 +104,9 @@ def adicionarUsuario():
         if(session['tipo_usuario'] == "admin"):
             return redirect(url_for('usuarios.principal'))
     return redirect("/")
+
 @usuarios.route("/tela_cadastro")
-def telaCadastro():
+def tela_cadastro():
     return render_template("tela_cadastro.html")
 
 

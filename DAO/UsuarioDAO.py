@@ -19,10 +19,10 @@ class UsuarioDAO:
         vetUsuarios = Usuario.query.all()
         return vetUsuarios
 
-    def validaLogin(nome,senha):
+    def validaLogin(email,senha):
         print("Valida Login!")
         try:
-            usuarioRecuperado = Usuario.query.filter_by(nome=nome).first()
+            usuarioRecuperado = Usuario.query.filter_by(email=email).first()
             if(usuarioRecuperado is not None):
                 print("senha do usuarioRecuperado: "+usuarioRecuperado.senha)
                 print("senha digitada: "+senha)

@@ -17,6 +17,15 @@
   </title>
 
   {% endblock %}
+
+  {% block styles %}
+  <style>
+      body {
+          background-image: url("{{ url_for('static', filename='background.jpg') }}");
+          background-size: cover;
+      }
+  </style>
+  {% endblock %}
 </head>
 
 <body>
