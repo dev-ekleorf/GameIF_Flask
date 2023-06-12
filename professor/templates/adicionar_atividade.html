@@ -17,7 +17,7 @@ Adicionar Atividade
     </ul>
     {% endif %}
     {% endwith %}
-
+<div class="container mt-3">
     <h2>Crie uma Nova atividade: {{id_sala}}</h2>
     <form class="row g-3" action="/professor/adicionar_atividade/{{id_sala}}" method="post" name="formularioAdicionarAtividade" enctype=multipart/form-data>
         <div class="col-md-12">
@@ -51,9 +51,9 @@ Adicionar Atividade
         </div>
 
 
-        <button type="submit" class="btn btn-primary my-5" onclick="validarAdicionarAtividade()"
+        <button type="submit" class="btn btn-success btn-lg btn-block" onclick="validarAdicionarAtividade()"
             name="Adicionar">Adicionar Atividade</button>
     </form>
-
+</div>
 {% endblock %}
 

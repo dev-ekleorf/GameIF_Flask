@@ -118,3 +118,31 @@ def atribuir_nota(id_resposta):
     
     atividade_selecionada = atividadeDAO.recupera_atividade(resposta_selecionada.atividade.id)
     return render_template("avaliacao_da_atividade.html",atividade_selecionada=atividade_selecionada)
+
+@professor.route("/tela_editar_sala/<id_sala>")
+def tela_editar_salas(id_sala):
+    salaDAO = SalaDAO()
+    sala_recuperada = salaDAO.recuperaSala(id_sala)
+    return render_template("editar_sala.html",sala_selecionada=sala_recuperada)
+
+@professor.route("/editar_sala/<id_sala>",methods=['POST'])
+def editar_sala(id_sala):
+    print("Editar Sala.")
+
+    logo = request.files['logo']
+    if(logo.filename == ""):
+        dataSave = ""
+        enderecoArquivo="logo_gameIF.jpeg"
+    else:    
+        dataSave = datetime.datetime.now().strftime('%d%m%Y%H%M%S')
+        print(dataSave)
+        logo.save(f'logos/{dataSave}_{logo.filename}')
+        enderecoArquivo = dataSave+'_'+logo.filename
+    
+    salaDAO = SalaDAO()
+    sala_recuperada = salaDAO.recuperaSala(id_sala)
+    sala_recuperada.nome = request.form['nome_sala']
+    sala_recuperada.descricao = request.form['descricao']
+    sala_recuperada.logo=enderecoArquivo
+    salaDAO.editarSala(sala_recuperada)
+    return redirect(url_for('professor.principal'))

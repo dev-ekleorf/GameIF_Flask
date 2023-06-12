@@ -17,9 +17,9 @@ Principal
     {% endif %}
     {% endwith %}
 
-   
+  <div class="container mt-3"> 
     <h2>Minhas Salas</h2>
-    <table class="table">
+    <table class="table mt-3">
         <thead>
             <tr>
                 <th scope="col">Logo</th>
@@ -35,13 +35,14 @@ Principal
                 <td>
                    <a href="{{ url_for('professor.carregar_sala',id = sala.id) }}">
                     <img src="{{url_for('logos',nome_arquivo=sala.logo)}}" class="img-thumbnail"
-                        style="max-width: 80px; max-width: 80px; filter: grayscale(1);"  alt="Logo da sala." >
+                        style="max-width: 80px; max-width: 80px;"  alt="Logo da sala." >
                    </a>
                 </td>
                 <td><a class="nav-link" href="{{ url_for('professor.carregar_sala',id = sala.id) }}">{{sala.nome}}</a></td>
                 <td>{{sala.participantes|count}}</td>
                 </div>
                 <td>
+                    <a class="btn btn-warning text-white" href="/professor/tela_editar_sala/{{sala.id}}">Editar da Sala</a>
                     <a class="btn btn-danger" href="/professor/excluir_sala/{{sala.id}}">Excluir da Sala</a>
                 </td>
 
@@ -56,10 +57,10 @@ Principal
         <div class="col">
         </div>
         <div class="col-auto">
-          <a class="btn btn-primary pull-right" href="/professor/tela_criar_sala">Criar Sala</a>
+          <a class="btn btn-success btn-lg btn-block" href="/professor/tela_criar_sala">Criar Sala</a>
         </div>
       </div>
-
+</div>
       
 
 {% endblock %}

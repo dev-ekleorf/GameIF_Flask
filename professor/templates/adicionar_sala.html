@@ -17,31 +17,54 @@ Adicionar sala
     </ul>
     {% endif %}
     {% endwith %}
-
+<div class="container mt-3">
     <h2>Nova Sala: </h2>
     <form class="row g-3" action="/professor/criar_sala" method="post" name="formularioCriarSala" enctype=multipart/form-data>
-        <div class="col-md-12">
-            <label for="nome_sala" class="form-label">Nome da Sala
+        <div class="col-md-7">
+            <label for="nome_sala" class="form-label" required>Nome da Sala
                 <span class="text-danger font-weight-bold">*</span>
             </label>
             <input type="text" name="nome_sala" class="form-control" id="nome_sala" required>
         </div>
-        <div class="col-md-12">
-            <label for="genero" class="form-label">Descrição
+        <div class="col-md-7">
+            <label for="descricao" class="form-label">Descrição
                 <span class="text-danger font-weight-bold">*</span>
             </label>
-            <input type="text" name="descricao" class="form-control" id="descricao" required>
+            <textarea name="descricao" class="form-control" id="descricao" required></textarea>
         </div>
         <div class="col-md-12">
 
-        <div class="col-md-12">
-            <label for="file" class="form-label">Logo</label>
-            <input type=file class="form-control" name=logo id="logo" accept="image/*" />
+        <div class="form-group mt-3">
+            <div class="d-flex justify-content-center mb-4">
+                <img src="/logos/logo_gameIF.jpeg"
+                    class="rounded-square" alt="Logo padrão." style="width: 200px;" id="preview-image">
+            </div>
+            <div class="d-flex justify-content-center">
+                <div class="btn btn-success btn-lg btn-block">
+                    <label class="form-label text-white m-1" for="logo">Escolha um Logo para a Sala</label>
+                    <input type="file" class="form-control d-none" name="logo" id="logo" onchange="previewImage(event)" accept="image/*">
+                </div>
+            </div>
         </div>
 
-        <button type="submit" class="btn btn-primary my-5" onclick="validarCriarSala()"
-            name="criar">Criar</button>
+        <div class="d-flex justify-content-end mt-3">
+        <button type="submit" class="btn btn-success btn-lg btn-block" onclick="validarCriarSala()"
+            name="criar">Criar Sala</button>
+        </div>
     </form>
+</div>
 
+<script>
+    function previewImage(event) {
+        var input = event.target;
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('preview-image').src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
 {% endblock %}
 

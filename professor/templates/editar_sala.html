@@ -1,8 +1,8 @@
-{% extends "base.html" %}
+{% extends "base_professor.html" %}
 <script src="{{ asset('js/bootstrap-datepicker.min.js')}}"></script>
 
 {% block title %}
-Lista de Filmes
+Editar sala: {{sala_selecionada.nome}}
 {% endblock %}
 
 {% block content %}
@@ -17,63 +17,54 @@ Lista de Filmes
     </ul>
     {% endif %}
     {% endwith %}
-
-    <h2>Editar Filme: </h2>
-    <form class="row g-3" action="/filmes/editarFilme/{{filmeRecuperado.id}}" method="post" name="formularioEditarFilme" enctype=multipart/form-data>
-  
-        <input type="hidden" name="id" value = "{{filmeRecuperado.id}}" class="form-control" id="id">
-        
-        <div class="col-md-12">
-            <label for="titulo" class="form-label">Titulo
+<div class="container mt-3">
+    <h2>Nova Sala: </h2>
+    <form class="row g-3" action="/professor/editar_sala/{{sala_selecionada.id}}" method="post" name="formularioEditarSala" enctype=multipart/form-data>
+        <div class="col-md-7">
+            <label for="nome_sala" class="form-label">Nome da Sala
                 <span class="text-danger font-weight-bold">*</span>
             </label>
-            <input type="text" name="titulo" value = "{{filmeRecuperado.titulo}}" class="form-control" id="titulo" required>
+            <input type="text" name="nome_sala" class="form-control" id="nome_sala" value="{{sala_selecionada.nome}}" required>
         </div>
-        <div class="col-md-12">
-            <label for="genero" class="form-label">Genero
+        <div class="col-md-7">
+            <label for="descricao" class="form-label">Descrição
                 <span class="text-danger font-weight-bold">*</span>
             </label>
-            <input type="text" name="genero" value = "{{filmeRecuperado.genero}}" class="form-control" id="genero" required>
+            <textarea name="descricao" class="form-control" id="descricao" required>{{sala_selecionada.descricao}}</textarea>
         </div>
         <div class="col-md-12">
-            <label for="sinopse">Sinopse</label>
-            <textarea class="form-control" name="sinopse" placeholder="Sinopse" id="sinopse">{{filmeRecuperado.sinopse}}</textarea>
+
+        <div class="form-group mt-3">
+            <div class="d-flex justify-content-center mb-4">
+                <img src="/logos/{{sala_selecionada.logo}}"
+                    class="rounded-square" alt="Logo padrão." style="width: 200px;" id="preview-image">
+            </div>
+            <div class="d-flex justify-content-center">
+                <div class="btn btn-success btn-lg btn-block">
+                    <label class="form-label text-white m-1" for="logo">Escolha um Logo para a Sala</label>
+                    <input type="file" class="form-control d-none" name="logo" id="logo" onchange="previewImage(event)" accept="image/*">
+                </div>
+            </div>
         </div>
 
-        <div class="col-md-6">
-            <label for="datainicio" class="form-label">Data Exibicao Inicio
-                <span class="text-danger font-weight-bold">*</span>
-            </label>
-            <input type="date" value = "{{filmeRecuperado.getDataInicio()}}" class="form-control" name="datainicio" id="datainicio"
-                required>
-            <div id="invalid-periodo_exibicao_inicio" class="invalid-feedback"> </div>
+        <div class="d-flex justify-content-end mt-3">
+        <button type="submit" class="btn btn-success btn-lg btn-block" onclick="validarCriarSala()"
+            name="criar">Salvar Edição</button>
         </div>
-
-
-        <div class="col-md-6">
-            <label for="datafim" class="form-label">Data Exibicao Fim
-                <span class="text-danger font-weight-bold">*</span>
-            </label>
-            <input type="date" value = "{{filmeRecuperado.getDataFim()}}" class="form-control" name="datafim" id="datainicio" required>
-            <div id="invalid-periodo_exibicao_fim" class="invalid-feedback"> </div>
-        </div>
-
-        <div class="col-md-12">
-            <label for="file" class="form-label">Cartaz</label>
-            <figure>
-                <img src="{{url_for('cartazes',nome_arquivo=filmeRecuperado.cartaz)}}" class="img-thumbnail"
-                style="max-width: 80px; max-width: 80px;" alt="...">
-                <figcaption>
-                  <label>
-                     <input type="file" name="cartaz" id="cartaz" value="{{filmeRecuperado.cartaz}}" accept=".jpg">
-                  </label>
-                </figcaption>
-            </figure>
-        </div>
-
-        <button type="submit" class="btn btn-primary my-5" onclick=""
-            name="Adicionar">Atualizar</button>
     </form>
+</div>
 
+<script>
+    function previewImage(event) {
+        var input = event.target;
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('preview-image').src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
 {% endblock %}
 
