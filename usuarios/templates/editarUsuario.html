@@ -2,10 +2,15 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <!------ Include the above in your HEAD tag ---------->
+{% if usuario.tipo == 'aluno' %}
+    {% extends 'base_aluno.html' %}
+{% else %}
+    {% extends 'base_professor.html' %}
+{% endif %}
 
-<head>
-    <title>Editar Usuário: {{ usuario.nome }}</title>
-</head>
+{% block title %}
+    Editar Usuário: {{ usuario.nome }}
+{% endblock %}
 
 
 {% block content %}
@@ -24,7 +29,7 @@
         <div id="login-row" class="row justify-content-center align-items-center">
             <div id="login-column" class="col-md-6">
                 <div id="login-box" class="col-md-12">
-                    <form id="login-form" class="form" action="/usuarios/editarUsuario/{{usuario.id}}" method="post" enctype="multipart/form-data">
+                    <form id="login-form" class="form" action="/usuarios/editar_usuario/{{usuario.id}}" method="post" enctype="multipart/form-data">
                         <h3 class="text-center text-info">GameIF - Editar Usuário {{ usuario.nome }}</h3>
 
                         <div class="form-group">
@@ -39,23 +44,28 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="usuario" class="text-info">Usuário:</label><br>
-                            <input type="text" name="usuario" id="usuario" value="{{ usuario.nome }}" class="form-control">
+                            <label for="usuario" class="text-info">Nome:</label><br>
+                            <input type="text" name="nome" id="nome" class="form-control" value="{{usuario.nome}}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="apelido" class="text-info">Apelido:</label><br>
+                            <input type="text" name="apelido" id="apelido" class="form-control" value="{{usuario.apelido}}" required>
                         </div>
 
                         <div class="form-group">
                             <label for="email" class="text-info">Email:</label><br>
-                            <input type="text" name="email" id="email" value="{{ usuario.email }}" class="form-control">
+                            <input type="email" name="email" id="email" class="form-control" value="{{usuario.email}}" required title="Por favor, insira um endereço de e-mail válido">
                         </div>
 
                         <div class="form-group">
                             <label for="password" class="text-info">Senha:</label><br>
-                            <input type="password" name="senha" id="senha" class="form-control">
+                            <input type="password" name="senha" id="senha" class="form-control" value = "{{usuario.senha}}" required>
                         </div>
 
                         <div class="form-group">
                             <label for="confirme-senha" class="text-info">Confirme a Senha:</label><br>
-                            <input type="password" name="confirme-senha" id="confirme-senha" class="form-control">
+                            <input type="password" name="confirme-senha" id="confirme-senha" class="form-control" value = "{{usuario.senha}}" required>
                         </div>
 
                         <div class="form-group">
@@ -71,8 +81,8 @@
                         </div>
 
                         <div class="d-flex justify-content-center">
-                            <input type="submit" class="btn btn-primary btn-lg mr-2" value="Cadastrar">
-                            <a class="btn btn-secondary btn-lg" href="/usuarios/principal" role="button">Cancelar</a>
+                            <input type="submit" class="btn btn-success btn-lg mr-2" value="Salvar edição">
+                            <a class="btn btn-danger btn-lg" href="/usuarios/meu_perfil" role="button">Cancelar</a>
                         </div>
                     </form>
                 </div>

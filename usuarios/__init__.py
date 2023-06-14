@@ -120,25 +120,32 @@ def excluirUsuario(id):
     usuarioDAO.removeUsuario(id)
     return redirect(url_for('usuarios.listar_usuarios'))
 
-@usuarios.route("/telaEditarUsuario/<int:id>")
-def telaEditarUsuario(id):
-    print("telaEditarFilme: Id: "+str(id))
+@usuarios.route("/tela_editar_usuario/<int:id>")
+def tela_editar_usuario(id):
+    print("tela_editar_usuario: Id: "+str(id))
     usuarioDAO = UsuarioDAO()
     usuarioRecuperado = usuarioDAO.recuperaUsuario(id)
     return render_template("editarUsuario.html",usuario=usuarioRecuperado)
 
-@usuarios.route("/editarUsuario/<int:id>",methods=['POST'])
-def editarUsuario(id):
+@usuarios.route("/editar_usuario/<int:id>",methods=['POST'])
+def editar_usuario(id):
     print("Editar Usuario!")
-    nome = request.form['usuario']
+    nome = request.form['nome']
     senha = str(bcrypt.generate_password_hash(request.form['senha']).decode('utf-8'))
     email = request.form['email']
+    apelido = request.form['apelido']
     avatar = request.files['avatar_usuario']
     tipo_usuario = request.form['tipo-usuario']
 
+    usuarioDAO = UsuarioDAO()        
+    usuario =usuarioDAO.recuperaUsuario(id)
+
+    if(usuario.senha != senha):
+        usuario.senha = str(bcrypt.generate_password_hash(request.form['senha']).decode('utf-8'))
+
     if(avatar.filename == ""):
         dataSave = ""
-        endereco_arquivo="avatar.jpg"
+        endereco_arquivo=usuario.avatar
     else:    
         dataSave = datetime.datetime.now().strftime('%d%m%Y%H%M%S')
         print(dataSave)
@@ -146,7 +153,7 @@ def editarUsuario(id):
         endereco_arquivo = dataSave+'_'+avatar.filename
 
     print("usuario: "+nome)
-    print("senha: "+senha)
+    print("apelido: "+apelido)
     print("email: "+email)
     print("tipo_usuario: "+tipo_usuario)
     print("avatar: "+endereco_arquivo)
@@ -154,6 +161,7 @@ def editarUsuario(id):
     usuarioDAO = UsuarioDAO()        
     usuario =usuarioDAO.recuperaUsuario(id)
     usuario.nome = nome
+    usuario.apelido = apelido
     usuario.senha = senha
     usuario.email = email
     usuario.avatar = endereco_arquivo
@@ -162,7 +170,7 @@ def editarUsuario(id):
     usuarioDAO.editarUsuario(usuario)
 
    
-    return redirect(url_for('usuarios.principal'))
+    return redirect(url_for('usuarios.meu_perfil'))
    
 
 

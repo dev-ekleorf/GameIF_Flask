@@ -16,3 +16,6 @@ class AtividadeDAO():
     def grava_resposta(self,resposta):
         db.session.add(resposta)
         db.session.commit()
+
+    def salvar_atividade(self):
+        db.session.commit()

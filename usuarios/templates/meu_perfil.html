@@ -26,16 +26,19 @@ Meu Perfil
     {% endif %}
 {% endwith %}
 
-<div class="container">
-    <h2>Informações do Usuário</h2>
-    <div>
-        <img src="{{ url_for('avatar', nome_arquivo=usuario.avatar) }}" class="img-thumbnail avatar-image" alt="Avatar do Usuário">
-
-        <h4>Nome do Usuário: {{usuario.nome}}</h4>
-        <h4>Email do Usuário: {{usuario.email}}</h4>
-        <h4>Tipo: {{usuario.tipo}}</h4>
+<div class="container my-4 px-4">
+    <h2 class="text-success text-center mb-4">Informações do Usuário:</h2>
+    <div class="user-info text-center">
+        <img src="{{ url_for('avatar', nome_arquivo=usuario.avatar) }}" class="img-thumbnail rounded-circle avatar-image" alt="Avatar do Usuário">
+        <h3 class="text-info">Nome: {{usuario.nome}}</h3>
+        <h3 class="text-info">Apelido do Usuário: {{usuario.apelido}}</h3>
+        <h3 class="text-info">Email: {{usuario.email}}</h3>
+        <h3 class="text-info">Tipo: {{usuario.tipo}}</h3>
+        
+        <a class="btn btn-warning text-white btn-lg mt-3" href="/usuarios/tela_editar_usuario/{{usuario.id}}" role="button">Editar Informações</a>
     </div>
 </div>
+
 <script>
     $(document).ready(function() {
         $('.avatar-image').click(function() {
@@ -43,17 +46,21 @@ Meu Perfil
         });
     });
 </script>
+
 <style>
     .avatar-image {
-        max-width: 800px;
-        max-height: 800px;
+        max-width: 100px;
+        max-height: 100px;
+        border: 2px solid #ccc;
         transition: transform 0.3s;
     }
 
     .avatar-image.enlarged {
-        max-width: 200px;
-        max-height: 200px;
+        max-width: 400px;
+        max-height: 400px;
     }
+
+  
 </style>
 
 {% endblock %}

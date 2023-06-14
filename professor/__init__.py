@@ -128,21 +128,52 @@ def tela_editar_salas(id_sala):
 @professor.route("/editar_sala/<id_sala>",methods=['POST'])
 def editar_sala(id_sala):
     print("Editar Sala.")
+    salaDAO = SalaDAO()
+    sala_recuperada = salaDAO.recuperaSala(id_sala)
 
     logo = request.files['logo']
     if(logo.filename == ""):
         dataSave = ""
-        enderecoArquivo="logo_gameIF.jpeg"
+        enderecoArquivo=sala_recuperada.logo
     else:    
         dataSave = datetime.datetime.now().strftime('%d%m%Y%H%M%S')
         print(dataSave)
         logo.save(f'logos/{dataSave}_{logo.filename}')
         enderecoArquivo = dataSave+'_'+logo.filename
     
-    salaDAO = SalaDAO()
-    sala_recuperada = salaDAO.recuperaSala(id_sala)
+    
     sala_recuperada.nome = request.form['nome_sala']
     sala_recuperada.descricao = request.form['descricao']
     sala_recuperada.logo=enderecoArquivo
     salaDAO.editarSala(sala_recuperada)
     return redirect(url_for('professor.principal'))
+
+@professor.route("/tela_editar_atividade/<id_atividade>")
+def tela_editar_atividade(id_atividade):
+    atividadeDAO = AtividadeDAO()
+    atividade_recuperada = atividadeDAO.recupera_atividade(id_atividade)
+    return render_template("editar_atividade.html",atividade_selecionada=atividade_recuperada)
+
+@professor.route("/editar_atividade/<int:id_atividade>",methods=['POST'])
+def editar_atividade(id_atividade):
+    print("Editar atividade.")
+
+    atividadeDAO = AtividadeDAO()
+    atividade = atividadeDAO.recupera_atividade(id_atividade)
+
+    nome=request.form['nome_atividade']
+    descricao=request.form['descricao']
+    pontuacao=request.form['pontuacao']
+    tipo_atividade=request.form['tipo_atividade']
+    print("nome: "+nome)
+    print("descricao: "+descricao)
+    print("pontuacao: "+pontuacao)
+    print("tipo_atividade: "+tipo_atividade)
+    
+    atividade.nome = nome
+    atividade.descricao = descricao
+    atividade.pontuacao = pontuacao
+    atividade.tipo = tipo_atividade
+
+    atividadeDAO.salvar_atividade()    
+    return redirect(url_for('professor.carregar_sala',id=atividade.sala_id))

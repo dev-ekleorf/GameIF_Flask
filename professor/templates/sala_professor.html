@@ -62,7 +62,7 @@ Sala Professor
                         <th scope="col">Nome</th>
                         <th scope="col">Descrição</th>
                         <th scope="col">Tipo</th>
-                        <th scope="col">Excluir</th>
+                        <th scope="col">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,6 +73,7 @@ Sala Professor
                             <td>{{ atividade.descricao }}</td>
                             <td>{{ atividade.tipo }}</td>
                             <td>
+                                <a class="btn btn-warning text-white" href="/professor/tela_editar_atividade/{{atividade.id}}">Editar Atividade</a>
                                 <a class="btn btn-danger" href="/professor/excluir_atividade/{{ sala_selecionada.id }}/{{ atividade.id }}">Excluir</a>
                             </td>
                         </tr>

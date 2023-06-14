@@ -2,7 +2,7 @@
 <script src="{{ asset('js/bootstrap-datepicker.min.js')}}"></script>
 
 {% block title %}
-Adicionar Atividade
+Editar Atividade
 {% endblock %}
 
 {% block content %}
@@ -18,25 +18,25 @@ Adicionar Atividade
     {% endif %}
     {% endwith %}
 <div class="container mt-3">
-    <h2>Crie uma nova atividade para a sala: </h2>
-    <form class="row g-3" action="/professor/adicionar_atividade/{{id_sala}}" method="post" name="formularioAdicionarAtividade" enctype=multipart/form-data>
+    <h2>Editar as informações da atividade: {{atividade_selecionada.nome}}</h2>
+    <form class="row g-3" action="/professor/editar_atividade/{{atividade_selecionada.id}}" method="post" name="formularioAdicionarAtividade" enctype=multipart/form-data>
         <div class="col-md-7">
             <label for="nome_atividade" class="form-label">Nome
                 <span class="text-danger font-weight-bold">*</span>
             </label>
-            <input type="text" name="nome_atividade" class="form-control" id="titulo" required>
+            <input type="text" name="nome_atividade" class="form-control" id="titulo" value="{{atividade_selecionada.nome}}" required>
         </div>
         <div class="col-md-7">
             <label for="descricao" class="form-label">Descrição
                 <span class="text-danger font-weight-bold">*</span>
             </label>
-            <textarea name="descricao" class="form-control" id="descricao" required></textarea>
+            <textarea name="descricao" class="form-control" id="descricao" required>{{atividade_selecionada.descricao}}</textarea>
         </div>
         <div class="col-md-7">
             <label for="descricao" class="form-label">Pontuação
                 <span class="text-danger font-weight-bold">*</span>
             </label>
-            <input type="text" name="pontuacao" class="form-control" id="pontuacao" pattern="\d+" required title="Este campo aceita apenas valores numéricos.">
+            <input type="text" name="pontuacao" class="form-control" id="pontuacao" pattern="\d+" required title="Este campo aceita apenas valores numéricos." value="{{atividade_selecionada.pontuacao}}">
         </div>
         <div class="col-md-7">
             <label>Tipo de Atividade:</label><br>
@@ -52,7 +52,7 @@ Adicionar Atividade
 
             <div class="d-flex justify-content-center mt-3">
                 <input type="submit" class="btn btn-success btn-lg btn-block me-3" value="Salvar Atividade" onclick="validarAdicionarAtividade()">
-                <a class="btn btn-danger btn-lg ms-3" href="/professor/carregar_sala/{{id_sala}}" role="button">Cancelar</a>
+                <a class="btn btn-danger btn-lg ms-3" href="/professor/carregar_sala/{{atividade_selecionada.sala_id}}" role="button">Cancelar</a>
             </div>
     </form>
 </div>
