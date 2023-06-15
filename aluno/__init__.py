@@ -60,7 +60,10 @@ def carregar_sala(id):
     posicao_no_ranking = UsuarioDAO.obter_posicao_aluno(ranking,aluno_id)
     #porcentagem_preencher_imagem = (pontuacao_aluno*100)/pontuacao_sala
     atividades_realizadas = respostaDAO.atividades_realizadas_usuario(aluno_id)
-    porcentagem_preencher_imagem = (atividades_realizadas[id]*100)/len(sala_selecionada.atividades)
+    try:
+        porcentagem_preencher_imagem = (atividades_realizadas[id]*100)/len(sala_selecionada.atividades)
+    except:
+        porcentagem_preencher_imagem = 100
     print("porcentagem_preencher_imagem: "+str(porcentagem_preencher_imagem))
     print("porcentagem_preencher_imagem: "+str(porcentagem_preencher_imagem))
     return render_template("sala_aluno.html",sala_selecionada=sala_selecionada,pontuacao_aluno=pontuacao_aluno,pontuacao_sala=pontuacao_sala,posicao_no_ranking=posicao_no_ranking,porcentagem_preencher_imagem=porcentagem_preencher_imagem)
