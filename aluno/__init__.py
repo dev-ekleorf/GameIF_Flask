@@ -3,6 +3,7 @@ from flask import Flask
 from flask import Blueprint
 from flask import render_template,redirect, url_for, request, session,send_from_directory
 from DAO.AtividadeDAO import AtividadeDAO
+from DAO.RespostaDAO import RespostaDAO
 from DAO.UsuarioDAO import UsuarioDAO
 from DAO.SalaDAO import SalaDAO
 from Model.Usuario import Usuario
@@ -50,13 +51,17 @@ def sair_da_sala(id_sala):
 @aluno.route("/carregar_sala/<int:id>")
 def carregar_sala(id):
     salaDAO = SalaDAO()
+    respostaDAO = RespostaDAO()
     sala_selecionada = salaDAO.recuperaSala(id)
     pontuacao_sala = sum(atividade.pontuacao for atividade in sala_selecionada.atividades)
     aluno_id = session['usuarioLogado']
     pontuacao_aluno = UsuarioDAO.calcular_pontuacao_total_aluno(aluno_id,sala_selecionada.id)
     ranking =salaDAO.gerar_ranking(id)
     posicao_no_ranking = UsuarioDAO.obter_posicao_aluno(ranking,aluno_id)
-    porcentagem_preencher_imagem = (pontuacao_aluno*100)/pontuacao_sala
+    #porcentagem_preencher_imagem = (pontuacao_aluno*100)/pontuacao_sala
+    atividades_realizadas = respostaDAO.atividades_realizadas_usuario(aluno_id)
+    porcentagem_preencher_imagem = (atividades_realizadas[id]*100)/len(sala_selecionada.atividades)
+    print("porcentagem_preencher_imagem: "+str(porcentagem_preencher_imagem))
     print("porcentagem_preencher_imagem: "+str(porcentagem_preencher_imagem))
     return render_template("sala_aluno.html",sala_selecionada=sala_selecionada,pontuacao_aluno=pontuacao_aluno,pontuacao_sala=pontuacao_sala,posicao_no_ranking=posicao_no_ranking,porcentagem_preencher_imagem=porcentagem_preencher_imagem)
 
@@ -78,7 +83,7 @@ def resolve_atividade(atividade_id):
 
     else:
         resposta=request.form['resposta']
-        
+
     resposta = Resposta(usuario_id=session['usuarioLogado'],atividade_id=atividade_id,resposta=resposta,data_de_resposta=date.today())
     
     
