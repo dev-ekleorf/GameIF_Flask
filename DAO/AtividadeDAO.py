@@ -1,3 +1,5 @@
+from sqlalchemy import func
+from Model.Resposta import Resposta
 from Model.Sala import *
 from Model.Usuario import *
 from Model.Atividade import Atividade
@@ -19,3 +21,5 @@ class AtividadeDAO():
 
     def salvar_atividade(self):
         db.session.commit()
+
+    

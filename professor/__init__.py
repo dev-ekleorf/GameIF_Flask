@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, send_file
 from flask import Blueprint
 from flask import render_template,redirect, url_for, request, session,send_from_directory
 from DAO.RespostaDAO import RespostaDAO
@@ -23,7 +23,8 @@ bcrypt = Bcrypt()
 def carregar_sala(id):
     salaDAO = SalaDAO()
     sala_selecionada = salaDAO.recuperaSala(id)
-    return render_template("sala_professor.html",sala_selecionada=sala_selecionada)
+    ranking = salaDAO.gerar_ranking(id)
+    return render_template("sala_professor.html",sala_selecionada=sala_selecionada,ranking=ranking)
 
 @professor.route('/principal')
 def principal():
@@ -186,3 +187,12 @@ def excluir_resposta(id_atividade,id_resposta):
     respostaDAO = RespostaDAO() 
     respostaDAO.remove_resposta(id_resposta)
     return redirect(url_for('professor.avaliar_atividade',id_atividade=id_atividade))
+
+@professor.route("/download_resposta/<int:id_resposta>")
+def download_resposta(id_resposta):
+    
+    respostaDAO = RespostaDAO()
+    resposta = respostaDAO.recupera_resposta(id_resposta)
+    arquivo_path = 'respostas\\'+resposta.resposta
+
+    return send_file(arquivo_path, as_attachment=True)

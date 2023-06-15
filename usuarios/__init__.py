@@ -1,6 +1,8 @@
 from flask import flash
 from flask import Blueprint
 from flask import render_template,redirect, url_for, request, session,send_from_directory
+from DAO.AtividadeDAO import AtividadeDAO
+from DAO.RespostaDAO import RespostaDAO
 from DAO.UsuarioDAO import UsuarioDAO
 from DAO.SalaDAO import SalaDAO
 from Model.Usuario import Usuario
@@ -42,11 +44,12 @@ def principal():
     usuario_logado = usuarioDAO.recuperaUsuario(id_usuario)
     salaDAO = SalaDAO()
     arraySalas = salaDAO.recupera_salas_usuario(usuario_logado)
-    salas = salaDAO.recupera_salas_usuario(usuario_logado)
     if(usuario_logado.tipo == "professor"):
         return redirect(url_for('professor.principal'))
     elif(usuario_logado.tipo == "aluno"):
-        return render_template("principal_aluno.html",arraySalas=arraySalas)
+        respostaDAO = RespostaDAO()
+        atividades_realizadas = respostaDAO.atividades_realizadas_usuario(id_usuario)
+        return render_template("principal_aluno.html",arraySalas=arraySalas,atividades_realizadas=atividades_realizadas)
     elif(usuario_logado.tipo == "admin"):
         usuarios = UsuarioDAO.listarUsuarios()
         return render_template("principal_administrador.html",usuarios=usuarios)

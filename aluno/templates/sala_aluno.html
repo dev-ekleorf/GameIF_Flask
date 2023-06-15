@@ -17,17 +17,15 @@ Sala {{sala_selecionada.nome}}
 {% endif %}
 {% endwith %}
 
-
-<div class="container">
+<div class="container mt-3"> 
     <div class="row">
         <div class="col-lg-12 d-flex justify-content-between">
             <h1 class="page-header">{{sala_selecionada.nome}}</h1>
-
+            <div class="image-container">
+              <img src="{{url_for('logos',nome_arquivo=sala_selecionada.logo)}}" class="img-thumbnail sala-logo grayscale-image" style="max-width: 200px; max-height: 200px;" alt="Logo da Sala">
+              <img src="{{url_for('logos',nome_arquivo=sala_selecionada.logo)}}" class="img-thumbnail sala-logo color-image" style="max-width: 200px; max-height: 200px; mix-blend-mode: multiply; position: absolute; top: 0; left: 0;" alt="Logo da Sala">
+            </div>
             <div id="gamificação" class="p-3 mb-4 rounded" style="background-color: #f7f7f7;">
-                <div class="image-container">
-                  <img src="{{url_for('logos',nome_arquivo=sala_selecionada.logo)}}" class="img-thumbnail sala-logo grayscale-image" style="max-width: 200px; max-height: 200px;" alt="Logo da Sala">
-                  <img src="{{url_for('logos',nome_arquivo=sala_selecionada.logo)}}" class="img-thumbnail sala-logo color-image" style="max-width: 200px; max-height: 200px; mix-blend-mode: multiply; position: absolute; top: 0; left: 0;" alt="Logo da Sala">
-                </div>
                 <h1 class="page-header">Pontuação: {{pontuacao_aluno}} | {{pontuacao_sala}}</h1>
                 <h1 class="page-header">Ranking:   &nbsp;&nbsp;&nbsp; {{posicao_no_ranking}} | {{sala_selecionada.participantes|count-1}}</h1>
             </div>
@@ -35,11 +33,10 @@ Sala {{sala_selecionada.nome}}
     </div>
 </div>
 
-<div class="container">
-
+<div class="container mt-2"> 
    <div class="accordion" id="accordionExample">
         {% for tarefa in sala_selecionada.atividades %}
-        <div class="accordion-item">
+        <div class="accordion-item mt-3">
           <h2 class="accordion-header" id={{tarefa.id}}>
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_{{tarefa.id}}" aria-expanded="true" aria-controls="collapse_{{tarefa.id}}">
               <span class="task-icon">
@@ -56,14 +53,17 @@ Sala {{sala_selecionada.nome}}
           </h2>
           <div id="collapse_{{tarefa.id}}" class="accordion-collapse collapse" aria-labelledby={{tarefa.id}} data-bs-parent="#accordionExample">
             <div class="accordion-body">
-              <strong class="task-description">{{tarefa.descricao}}</strong> 
+              <label class="task-description">Descrição: {{tarefa.descricao}}</label>
+              <label class="task-description">Data final de entrega: {{tarefa.data_final|datetimeformat('%d/%m/%Y')}}</label> 
               {% if tarefa.tipo == "envio-arquivo" %}
-              <form id="atividade_{{tarefa.id}}" class="form" action="/aluno/resolve_atividade/{{tarefa.id}}" method="post">
+              <form id="atividade_{{tarefa.id}}" class="form" action="/aluno/resolve_atividade/{{tarefa.id}}" method="post" enctype="multipart/form-data">
                 <div class="form-group m-2">
-                  <label class="form-label" for="customFile">Envie a foto</label>
+                  <label class="form-label" for="customFile">Envie o Arquivo de Resposta</label>
                   <input type="file" class="form-control" id="resposta" name="resposta" />
                 </div>
-                <button type="submit" class="btn btn-primary mt-2"><i class="fa fa-upload"></i> Enviar</button>
+                <div class="justify-content-start">
+                  <button type="submit" class="btn btn-success mt-2"><i class="fa fa-upload"></i> Enviar</button>
+                </div>
               </form>
                 
               {% elif tarefa.tipo == "resposta-longa" %}
@@ -72,16 +72,20 @@ Sala {{sala_selecionada.nome}}
                   <label for="exampleFormControlTextarea1"><i class="fa fa-pencil"></i> Escreva sua Resposta</label>
                   <textarea class="form-control" id="resposta" name="resposta" rows="15"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary mt-2"><i class="fa fa-check"></i> Enviar</button>
-              </form>
+                <div class="justify-content-start">
+                  <button type="submit" class="btn btn-success mt-2"><i class="fa fa-check"></i> Enviar</button>
+                </div>
+                </form>
               {% elif tarefa.tipo == "resposta-curta" %}
               <form id="atividade_{{tarefa.id}}" class="form" action="/aluno/resolve_atividade/{{tarefa.id}}" method="post">
                 <div class="form-group m-2">
                   <label for="exampleFormControlTextarea1"><i class="fa fa-comment"></i> Escreva sua Resposta</label>
-                  <textarea class="form-control" id="resposta" name="resposta" rows="1"></textarea>
+                  <input type="text" maxlength="140" class="form-control" id="resposta" name="resposta" rows="1">
                 </div>
-                <button type="submit" class="btn btn-primary mt-2"><i class="fa fa-check"></i> Enviar</button>
-              </form>
+                <div class="justify-content-start">
+                  <button type="submit" class="btn btn-success mt-2 justify-content-end"><i class="fa fa-check"></i> Enviar</button>
+                </div>
+                </form>
               {% endif %} 
             </div>
           </div>

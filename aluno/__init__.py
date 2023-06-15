@@ -1,3 +1,4 @@
+import datetime
 from flask import Flask
 from flask import Blueprint
 from flask import render_template,redirect, url_for, request, session,send_from_directory
@@ -53,7 +54,7 @@ def carregar_sala(id):
     pontuacao_sala = sum(atividade.pontuacao for atividade in sala_selecionada.atividades)
     aluno_id = session['usuarioLogado']
     pontuacao_aluno = UsuarioDAO.calcular_pontuacao_total_aluno(aluno_id,sala_selecionada.id)
-    ranking =UsuarioDAO.gerar_ranking(id)
+    ranking =salaDAO.gerar_ranking(id)
     posicao_no_ranking = UsuarioDAO.obter_posicao_aluno(ranking,aluno_id)
     porcentagem_preencher_imagem = (pontuacao_aluno*100)/pontuacao_sala
     print("porcentagem_preencher_imagem: "+str(porcentagem_preencher_imagem))
@@ -62,10 +63,31 @@ def carregar_sala(id):
 @aluno.route("/resolve_atividade/<int:atividade_id>",methods=['POST'])
 def resolve_atividade(atividade_id):
     print("Resolve Atividade.")
-    
-    resposta = Resposta(usuario_id=session['usuarioLogado'],atividade_id=atividade_id,resposta=request.form['resposta'],data_de_resposta=date.today())
     atividadeDAO = AtividadeDAO()
     atividade = atividadeDAO.recupera_atividade(atividade_id)
+    
+
+    if(atividade.tipo == "envio-arquivo"):
+        resposta = request.files.get('resposta')
+            
+        dataSave = datetime.datetime.now().strftime('%d%m%Y%H%M%S')
+        print(dataSave)
+        resposta.save(f'respostas/{dataSave}_{resposta.filename}')
+        endereco_arquivo = dataSave+'_'+resposta.filename
+        resposta = endereco_arquivo
+
+    else:
+        resposta=request.form['resposta']
+        
+    resposta = Resposta(usuario_id=session['usuarioLogado'],atividade_id=atividade_id,resposta=resposta,data_de_resposta=date.today())
+    
+    
+    
+    
     atividadeDAO.grava_resposta(resposta)
     sala_id = atividade.sala_id
+
+
+
+
     return redirect(url_for('aluno.carregar_sala',id=sala_id))

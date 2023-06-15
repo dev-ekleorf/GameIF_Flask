@@ -75,11 +75,11 @@ Sala Professor
                                 <tr>
                                     <th scope="row">{{ posicao_ranking.posicao }}</th>
                                     <td>
-                                        <img src="{{ url_for('avatar', nome_arquivo=posicao_ranking.avatar) }}" class="img-thumbnail" style="max-width: 80px; max-width: 80px;" alt="Avatar">
+                                        <img src="{{ url_for('avatar', nome_arquivo=posicao_ranking.aluno_avatar) }}" class="img-thumbnail" style="max-width: 80px; max-width: 80px;" alt="Avatar">
                                     </td>
-                                    <td>{{ posicao_ranking.nome }}</td>
-                                    <td>{{ posicao_ranking.apelido }}</td>
-                                    <td>{{ posicao_ranking.pontuacao }}</td>
+                                    <td>{{ posicao_ranking.aluno_nome }}</td>
+                                    <td>{{ posicao_ranking.aluno_apelido }}</td>
+                                    <td>{{ posicao_ranking.pontuacao_total }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>

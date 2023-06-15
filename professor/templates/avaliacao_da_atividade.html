@@ -5,7 +5,6 @@ Avaliar Atividade {{atividade_selecionada.id}}
 {% endblock %}
 
 {% block content %}
-      
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     <ul class=flashes>
@@ -31,23 +30,47 @@ Avaliar Atividade {{atividade_selecionada.id}}
         </thead>
         <tbody>
             {% for resposta in atividade_selecionada.respostas %}
-
             <tr>
                 <th scope="row">{{ resposta.id }}</th>
-                <td>{{resposta.usuario.nome}}</td>
-                <td>{{resposta.resposta}}</td>
-                <td>{{resposta.data_de_resposta|datetimeformat('%d/%m/%Y') }}</td>
+                <td>{{ resposta.usuario.nome }}</td>
+                {% if atividade_selecionada.tipo == "envio-arquivo" %}
+                    <td><a href="{{ url_for('professor.download_resposta', id_resposta=resposta.id) }}">Download</a></td>
+                {% else %}
+                    <td>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalResposta{{ resposta.id }}">
+                            Visualizar
+                        </button>
+                    </td>
+                {% endif %}
+                <td>{{ resposta.data_de_resposta|datetimeformat('%d/%m/%Y') }}</td>
                 <td>
                     <form action="/professor/atribuir_nota/{{ resposta.id }}" method="post">
-                        <input type="number" name="nota" value="{{ resposta.pontuacao_recebida }}" min="0" max="{{atividade_selecionada.pontuacao}}">
+                        <input type="number" name="nota" value="{{ resposta.pontuacao_recebida }}" min="0" max="{{ atividade_selecionada.pontuacao }}">
                         <button class="btn btn-success" type="submit">Atribuir Nota</button>
                     </form>
                 </td>
                 <td>
-                    <a class="btn btn-danger" href="/professor/excluir_resposta/{{atividade_selecionada.id}}/{{resposta.id}}">Excluir</a>
+                    <a class="btn btn-danger" href="/professor/excluir_resposta/{{ atividade_selecionada.id }}/{{ resposta.id }}">Excluir</a>
                 </td>
             </tr>
 
+            <!-- Modal -->
+            <div class="modal fade" id="modalResposta{{ resposta.id }}" tabindex="-1" aria-labelledby="modalResposta{{ resposta.id }}Label" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalResposta{{ resposta.id }}Label">Resposta do Aluno</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p style="word-wrap: break-word;">{{ resposta.resposta }}</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {% endfor %}
         </tbody>
     </table>
@@ -56,7 +79,7 @@ Avaliar Atividade {{atividade_selecionada.id}}
     {% endif %}
 
     <div class="d-flex justify-content-end mt-3">
-        <a class="btn btn-success btn-lg btn-block me-3" href="/professor/carregar_sala/{{atividade_selecionada.sala_id}}">Voltar para a Sala</a>
+        <a class="btn btn-success btn-lg btn-block me-3" href="/professor/carregar_sala/{{ atividade_selecionada.sala_id }}">Voltar para a Sala</a>
     </div>
- </div>
+</div>
 {% endblock %}
