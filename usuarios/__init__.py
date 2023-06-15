@@ -131,7 +131,7 @@ def tela_editar_usuario(id):
 def editar_usuario(id):
     print("Editar Usuario!")
     nome = request.form['nome']
-    senha = str(bcrypt.generate_password_hash(request.form['senha']).decode('utf-8'))
+    senha = request.form['senha']
     email = request.form['email']
     apelido = request.form['apelido']
     avatar = request.files['avatar_usuario']
@@ -141,8 +141,10 @@ def editar_usuario(id):
     usuario =usuarioDAO.recuperaUsuario(id)
 
     if(usuario.senha != senha):
-        usuario.senha = str(bcrypt.generate_password_hash(request.form['senha']).decode('utf-8'))
-
+        senha = str(bcrypt.generate_password_hash(request.form['senha']).decode('utf-8'))
+    else:
+        senha = usuario.senha
+        
     if(avatar.filename == ""):
         dataSave = ""
         endereco_arquivo=usuario.avatar
@@ -151,12 +153,6 @@ def editar_usuario(id):
         print(dataSave)
         avatar.save(f'avatar/{dataSave}_{avatar.filename}')
         endereco_arquivo = dataSave+'_'+avatar.filename
-
-    print("usuario: "+nome)
-    print("apelido: "+apelido)
-    print("email: "+email)
-    print("tipo_usuario: "+tipo_usuario)
-    print("avatar: "+endereco_arquivo)
 
     usuarioDAO = UsuarioDAO()        
     usuario =usuarioDAO.recuperaUsuario(id)

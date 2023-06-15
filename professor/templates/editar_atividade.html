@@ -39,14 +39,18 @@ Editar Atividade
             <input type="text" name="pontuacao" class="form-control" id="pontuacao" pattern="\d+" required title="Este campo aceita apenas valores numéricos." value="{{atividade_selecionada.pontuacao}}">
         </div>
         <div class="col-md-7">
+            <label for="data">Prazo Final de Entrega:</label>
+                <input type="date" id="data_entrega" name="data_entrega" value="{{atividade_selecionada.data_final}}">
+        </div>
+        <div class="col-md-7">
             <label>Tipo de Atividade:</label><br>
-            <input type="radio" id="envio-arquivo" name="tipo_atividade" value="envio-arquivo" required>
+            <input type="radio" id="envio-arquivo" name="tipo_atividade" value="envio-arquivo" {% if atividade_selecionada.tipo == 'envio-arquivo' %}checked{% endif %} required>
             <label for="envio-arquivo">Envio de Arquivo</label><br>
 
-            <input type="radio" id="resposta-longa" name="tipo_atividade" value="resposta-longa">
+            <input type="radio" id="resposta-longa" name="tipo_atividade" value="resposta-longa" {% if atividade_selecionada.tipo == 'resposta-longa' %}checked{% endif %}>
             <label for="resposta-longa">Resposta Longa</label><br>
 
-            <input type="radio" id="resposta-curta" name="tipo_atividade" value="resposta-curta">
+            <input type="radio" id="resposta-curta" name="tipo_atividade" value="resposta-curta" {% if atividade_selecionada.tipo == 'resposta-curta' %}checked{% endif %}>
             <label for="resposta-curta">Resposta Curta</label><br><br>
         </div>
 

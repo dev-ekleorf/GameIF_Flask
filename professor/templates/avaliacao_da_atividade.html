@@ -15,17 +15,18 @@ Avaliar Atividade {{atividade_selecionada.id}}
     </ul>
     {% endif %}
     {% endwith %}
-   
+<div class="container mt-3">
     <h2>Lista de Respostas da Atividade: {{atividade_selecionada.id}} - {{atividade_selecionada.nome}}</h2>
-
+    {% if atividade_selecionada.respostas %}
     <table class="table">
         <thead>
             <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Nome Aluno</th>
                 <th scope="col">Resposta</th>
+                <th scope="col">Data da Resposta</th>
                 <th scope="col">Nota</th>
-                <th scope="col">Ações</th>
+                <th scope="col">Ação</th>
             </tr>
         </thead>
         <tbody>
@@ -35,20 +36,27 @@ Avaliar Atividade {{atividade_selecionada.id}}
                 <th scope="row">{{ resposta.id }}</th>
                 <td>{{resposta.usuario.nome}}</td>
                 <td>{{resposta.resposta}}</td>
+                <td>{{resposta.data_de_resposta|datetimeformat('%d/%m/%Y') }}</td>
                 <td>
                     <form action="/professor/atribuir_nota/{{ resposta.id }}" method="post">
                         <input type="number" name="nota" value="{{ resposta.pontuacao_recebida }}" min="0" max="{{atividade_selecionada.pontuacao}}">
-                        <button class="btn btn-primary" type="submit">Atribuir Nota</button>
+                        <button class="btn btn-success" type="submit">Atribuir Nota</button>
                     </form>
                 </td>
                 <td>
-                    <a class="btn btn-danger" href="/professor/excluirResposta/{{resposta.id}}">Excluir</a>
-                    <a class="btn btn-danger" href="/professor/telaEditarResposta/{{resposta.id}}">Editar</a>
+                    <a class="btn btn-danger" href="/professor/excluir_resposta/{{atividade_selecionada.id}}/{{resposta.id}}">Excluir</a>
                 </td>
             </tr>
 
             {% endfor %}
         </tbody>
     </table>
- 
+    {% else %}
+    <h6 class="mt-4">Ainda não temos respostas para essa atividade.</h6>
+    {% endif %}
+
+    <div class="d-flex justify-content-end mt-3">
+        <a class="btn btn-success btn-lg btn-block me-3" href="/professor/carregar_sala/{{atividade_selecionada.sala_id}}">Voltar para a Sala</a>
+    </div>
+ </div>
 {% endblock %}

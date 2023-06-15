@@ -6,8 +6,8 @@ from helper.config import *
 
 class RespostaDAO():
     def remove_resposta(self,id):
-        atividadeRecuperada = self.recupera_atividade(id)
-        db.session.delete(atividadeRecuperada)
+        respostaRecuperada = self.recupera_resposta(id)
+        db.session.delete(respostaRecuperada)
         db.session.commit()
 
     def recupera_resposta(self,id):

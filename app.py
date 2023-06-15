@@ -12,6 +12,7 @@ import os
 from sqlalchemy import create_engine
 import psycopg2
 from flask import flash
+from datetime import datetime,date
 
 
 app = Flask(__name__)
@@ -38,8 +39,8 @@ db.init_app(app)
 
 @app.route("/")
 def index():
-    #db.drop_all()
-    #db.create_all()
+    db.drop_all()
+    db.create_all()
     session.clear()
     messages = get_flashed_messages()  # Obter as flash messages
     return render_template("tela_login.html", messages=messages)
@@ -51,3 +52,9 @@ def logos(nome_arquivo):
 @app.route('/avatar/<nome_arquivo>')
 def avatar(nome_arquivo):
     return send_from_directory('avatar', nome_arquivo)
+
+@app.template_filter('datetimeformat')
+def datetimeformat(value, format='%d/%m/%Y'):
+    if isinstance(value, date):
+        return value.strftime(format)
+    return datetime.strptime(value, '%Y-%m-%d').strftime(format)

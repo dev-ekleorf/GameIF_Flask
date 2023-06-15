@@ -5,6 +5,7 @@ class Atividade(db.Model):
     nome = db.Column(db.String, nullable=False)
     descricao = db.Column(db.String, nullable=False)
     pontuacao = db.Column(db.Integer, nullable=False)
+    data_final = db.Column(db.Date, nullable=False)
     tipo = db.Column(db.String, nullable=False)
     sala_id = db.Column(db.Integer, db.ForeignKey("sala.id"))
     respostas = db.relationship("Resposta", back_populates="atividade")

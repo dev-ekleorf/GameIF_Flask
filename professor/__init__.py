@@ -80,12 +80,14 @@ def adicionar_atividade(id_sala):
     nome=request.form['nome_atividade']
     descricao=request.form['descricao']
     pontuacao=request.form['pontuacao']
+    data_entrega=request.form['data_entrega']
     tipo_atividade=request.form['tipo_atividade']
     print("nome: "+nome)
     print("descricao: "+descricao)
     print("pontuacao: "+pontuacao)
+    print("data final entrega: "+data_entrega)
     print("tipo_atividade: "+tipo_atividade)
-    atividade = Atividade(nome=nome,descricao=descricao,pontuacao=pontuacao,tipo=tipo_atividade)
+    atividade = Atividade(nome=nome,descricao=descricao,pontuacao=pontuacao,data_final=data_entrega,tipo=tipo_atividade)
     salaDAO = SalaDAO()
     sala = salaDAO.recuperaSala(id_sala)
     sala.atividades.append(atividade)
@@ -177,3 +179,10 @@ def editar_atividade(id_atividade):
 
     atividadeDAO.salvar_atividade()    
     return redirect(url_for('professor.carregar_sala',id=atividade.sala_id))
+
+@professor.route("/excluir_resposta/<int:id_atividade>/<int:id_resposta>")
+def excluir_resposta(id_atividade,id_resposta):
+    print("Excluir Resposta.")
+    respostaDAO = RespostaDAO() 
+    respostaDAO.remove_resposta(id_resposta)
+    return redirect(url_for('professor.avaliar_atividade',id_atividade=id_atividade))

@@ -7,7 +7,7 @@ from DAO.SalaDAO import SalaDAO
 from Model.Usuario import Usuario
 from flask import json, jsonify
 from flask_bcrypt import Bcrypt
-import datetime
+from datetime import date
 
 from Model.Sala import Sala
 from Model.Atividade import Atividade
@@ -63,7 +63,7 @@ def carregar_sala(id):
 def resolve_atividade(atividade_id):
     print("Resolve Atividade.")
     
-    resposta = Resposta(usuario_id=session['usuarioLogado'],atividade_id=atividade_id,resposta=request.form['resposta'])
+    resposta = Resposta(usuario_id=session['usuarioLogado'],atividade_id=atividade_id,resposta=request.form['resposta'],data_de_resposta=date.today())
     atividadeDAO = AtividadeDAO()
     atividade = atividadeDAO.recupera_atividade(atividade_id)
     atividadeDAO.grava_resposta(resposta)

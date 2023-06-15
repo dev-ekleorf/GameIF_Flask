@@ -19,10 +19,10 @@ Sala Professor
         <h2>{{ sala_selecionada.nome }}</h2>
 
         <div class="accordion mt-3 mb-3" id="participants-accordion">
-            <button class="btn btn-success btn-lg btn-block" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            <button class="btn btn-success btn-lg btn-block" type="button" data-bs-toggle="collapse" data-bs-target="#collapseParticipants" aria-expanded="false" aria-controls="collapseParticipants">
                 Ver lista de Participantes
             </button>
-            <div class="collapse" id="collapseExample">
+            <div class="collapse" id="collapseParticipants" data-bs-parent="#participants-accordion">
                 <div class="participant-info mb-3 mt-3">
                     <h2>Participantes</h2>
                     <table class="table">
@@ -53,6 +53,41 @@ Sala Professor
             </div>
         </div>
 
+        <div class="accordion mt-3 mb-3" id="ranking-accordion">
+            <button class="btn btn-success btn-lg btn-block" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRanking" aria-expanded="false" aria-controls="collapseRanking">
+                Ranking da Sala
+            </button>
+            <div class="collapse" id="collapseRanking" data-bs-parent="#ranking-accordion">
+                <div class="participant-info mb-3 mt-3">
+                    <h2>Ranking</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Posição</th>
+                                <th scope="col">Avatar</th>
+                                <th scope="col">Nome</th>
+                                <th scope="col">Apelido</th>
+                                <th scope="col">Pontuação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for posicao_ranking in ranking %}
+                                <tr>
+                                    <th scope="row">{{ posicao_ranking.posicao }}</th>
+                                    <td>
+                                        <img src="{{ url_for('avatar', nome_arquivo=posicao_ranking.avatar) }}" class="img-thumbnail" style="max-width: 80px; max-width: 80px;" alt="Avatar">
+                                    </td>
+                                    <td>{{ posicao_ranking.nome }}</td>
+                                    <td>{{ posicao_ranking.apelido }}</td>
+                                    <td>{{ posicao_ranking.pontuacao }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <div id="atividades">
             <h2>Atividades</h2>
             <table class="table">
@@ -61,6 +96,7 @@ Sala Professor
                         <th scope="col">ID</th>
                         <th scope="col">Nome</th>
                         <th scope="col">Descrição</th>
+                        <th scope="col">Data Final Entrega</th>
                         <th scope="col">Tipo</th>
                         <th scope="col">Ações</th>
                     </tr>
@@ -71,6 +107,7 @@ Sala Professor
                             <th scope="row">{{ atividade.id }}</th>
                             <td><a class="nav-link" href="{{ url_for('professor.avaliar_atividade', id_atividade=atividade.id) }}">{{ atividade.nome }}</a></td>
                             <td>{{ atividade.descricao }}</td>
+                            <td>{{atividade.data_final|datetimeformat('%d/%m/%Y') }}</td>
                             <td>{{ atividade.tipo }}</td>
                             <td>
                                 <a class="btn btn-warning text-white" href="/professor/tela_editar_atividade/{{atividade.id}}">Editar Atividade</a>
@@ -91,16 +128,14 @@ Sala Professor
     </div>
 
     <script>
-        var accordionButton = document.querySelector('.accordion button');
-        var panel = document.querySelector('.accordion .collapse');
-
-        accordionButton.addEventListener('click', function() {
-            this.classList.toggle('active');
-            if (panel.style.display === 'block') {
-                panel.style.display = 'none';
-            } else {
-                panel.style.display = 'block';
-            }
+        $(document).ready(function() {
+          $('.accordion .collapse').on('show.bs.collapse', function() {
+            $(this).siblings('button').addClass('active');
+          });
+        
+          $('.accordion .collapse').on('hide.bs.collapse', function() {
+            $(this).siblings('button').removeClass('active');
+          });
         });
-    </script>
+        </script>
 {% endblock %}
