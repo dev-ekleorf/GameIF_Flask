@@ -39,8 +39,8 @@ db.init_app(app)
 
 @app.route("/")
 def index():
-    #db.drop_all()
-    #db.create_all()
+    db.drop_all()
+    db.create_all()
     session.clear()
     messages = get_flashed_messages()  # Obter as flash messages
     return render_template("tela_login.html", messages=messages)
