@@ -1,4 +1,5 @@
-from sqlalchemy import desc, func
+from sqlalchemy import desc, func, not_
+from DAO.UsuarioDAO import UsuarioDAO
 from Model.Resposta import Resposta
 from Model.Sala import *
 from Model.Usuario import *
@@ -18,6 +19,13 @@ class SalaDAO:
         if(vetSalas is None):
             return []
         return vetSalas
+    
+    def listar_salas_para_participar(self,id_aluno):
+        vetSalas = Sala.query.filter(not_(Sala.participantes.any(id=id_aluno))).all()
+        if(vetSalas is None):
+            return []
+        return vetSalas
+    
 
     def removeSala(self,id):
         salaRecuperada = self.recuperaSala(id)
@@ -65,5 +73,37 @@ class SalaDAO:
             ranking.append(aluno_info)
             posicao += 1
 
+
+
         print("ranking: "+str(ranking))
+        return ranking
+    
+    def preencher_ranking_nao_respondentes(self,id_sala,id_usuario):
+        ranking = self.gerar_ranking(id_sala)
+
+        usuarioDAO = UsuarioDAO()
+        usuario = usuarioDAO.recuperaUsuario(id_usuario)
+            
+        for aluno_info in ranking:
+            if aluno_info['aluno_id'] == usuario.id:
+                print("dentro do ranking!")
+                flag=True
+                break
+            else:
+                print("fora do ranking")
+                
+                flag=False
+
+        if(flag == False):
+            aluno_info = {
+                    'posicao': len(ranking),
+                    'aluno_id': usuario.id,
+                    'aluno_nome': usuario.nome,
+                    'aluno_apelido':usuario.apelido,
+                    'aluno_avatar':usuario.avatar,
+                    'pontuacao_total': 0
+                }
+            ranking.append(aluno_info)
+
+        print("Está no ranking: "+str(flag))
         return ranking

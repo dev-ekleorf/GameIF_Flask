@@ -26,12 +26,48 @@ Sala {{sala_selecionada.nome}}
               <img src="{{url_for('logos',nome_arquivo=sala_selecionada.logo)}}" class="img-thumbnail sala-logo color-image" style="max-width: 200px; max-height: 200px; mix-blend-mode: multiply; position: absolute; top: 0; left: 0;" alt="Logo da Sala">
             </div>
             <div id="gamificação" class="p-3 mb-4 rounded" style="background-color: #f7f7f7;">
-                <h1 class="page-header">Pontuação: {{pontuacao_aluno}} | {{pontuacao_sala}}</h1>
-                <h1 class="page-header">Ranking:   &nbsp;&nbsp;&nbsp; {{posicao_no_ranking}} | {{sala_selecionada.participantes|count-1}}</h1>
+                <h1 class="page-header">Tenho {{pontuacao_aluno}} pontos de {{pontuacao_sala}} possíveis.</h1>
+                <h1 class="page-header">Sou o {{posicao_no_ranking}}º entre {{sala_selecionada.participantes|count-1}} participantes.</h1>
+                <div class="accordion mt-3 mb-3" id="ranking-accordion">
+                  <button class="btn btn-success btn-lg btn-block" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRanking" aria-expanded="false" aria-controls="collapseRanking">
+                      Ranking da Sala
+                  </button>
+                  <div class="collapse" id="collapseRanking" data-bs-parent="#ranking-accordion">
+                      <div class="participant-info mb-3 mt-3">
+                          <h2>Ranking</h2>
+                          <table class="table">
+                              <thead>
+                                  <tr>
+                                      <th scope="col">Posição</th>
+                                      <th scope="col">Avatar</th>
+                                      <th scope="col">Apelido</th>
+                                      <th scope="col">Pontuação</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  {% for posicao_ranking in ranking %}
+                                      <tr>
+                                          <th scope="row">{{ posicao_ranking.posicao }}</th>
+                                          <td>
+                                              <img src="{{ url_for('avatar', nome_arquivo=posicao_ranking.aluno_avatar) }}" class="img-thumbnail" style="max-width: 80px; max-width: 80px;" alt="Avatar">
+                                          </td>
+                                          <td>{{ posicao_ranking.aluno_apelido }}</td>
+                                          <td>{{ posicao_ranking.pontuacao_total }}</td>
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+              </div>
             </div>
         </div>
     </div>
 </div>
+{% set atividades_respondidas_ids = [] %}
+{% for tarefa in lista_pontuacao_aluno %}
+    {% set _ = atividades_respondidas_ids.append(tarefa.atividade_id) %}
+{% endfor %}
 
 <div class="container mt-2"> 
    <div class="accordion" id="accordionExample">
@@ -39,6 +75,7 @@ Sala {{sala_selecionada.nome}}
         <div class="accordion-item mt-3">
           <h2 class="accordion-header" id={{tarefa.id}}>
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_{{tarefa.id}}" aria-expanded="true" aria-controls="collapse_{{tarefa.id}}">
+      
               <span class="task-icon">
                 {% if tarefa.tipo == "envio-arquivo" %}
                     <i class="fa fa-file"></i>
@@ -55,7 +92,21 @@ Sala {{sala_selecionada.nome}}
             <div class="accordion-body">
               <label class="task-description">Descrição: {{tarefa.descricao}}</label>
               <label class="task-description">Data final de entrega: {{tarefa.data_final|datetimeformat('%d/%m/%Y')}}</label> 
+              {% if tarefa.id in atividades_respondidas_ids %}
+              <p>Esta tarefa já foi respondida.</p>
+              {% for pontuacao in lista_pontuacao_aluno %}
+              {% if pontuacao.atividade_id == tarefa.id %}
+                <p>Pontuação recebida: {{ pontuacao.pontuacao}}</p>
+                <div class="mt-auto text-center">
+                  <a href="/aluno/excluir_resposta/{{sala_selecionada.id}}/{{pontuacao.resposta_id}}" class="btn btn-danger">Excluir Resposta</a>
+                </div>
+              {% endif %}
+            {% endfor %}
+              
+              
+            {% else %}
               {% if tarefa.tipo == "envio-arquivo" %}
+              
               <form id="atividade_{{tarefa.id}}" class="form" action="/aluno/resolve_atividade/{{tarefa.id}}" method="post" enctype="multipart/form-data">
                 <div class="form-group m-2">
                   <label class="form-label" for="customFile">Envie o Arquivo de Resposta</label>
@@ -87,8 +138,10 @@ Sala {{sala_selecionada.nome}}
                 </div>
                 </form>
               {% endif %} 
+              {% endif %} 
             </div>
           </div>
+          
         </div>
       
       {% endfor %}
@@ -139,5 +192,17 @@ Sala {{sala_selecionada.nome}}
   
 
 </script>
+
+<script>
+  $(document).ready(function() {
+    $('.accordion .collapse').on('show.bs.collapse', function() {
+      $(this).siblings('button').addClass('active');
+    });
+  
+    $('.accordion .collapse').on('hide.bs.collapse', function() {
+      $(this).siblings('button').removeClass('active');
+    });
+  });
+  </script>
 
 {% endblock %}

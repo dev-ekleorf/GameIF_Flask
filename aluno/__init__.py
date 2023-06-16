@@ -21,8 +21,9 @@ aluno = Blueprint('aluno', __name__,
 
 @aluno.route("/procurar_salas")
 def procurar_salas():
+    id_usuario = session['usuarioLogado']
     salaDAO = SalaDAO()
-    salas_disponiveis = salaDAO.listarSalas()
+    salas_disponiveis = salaDAO.listar_salas_para_participar(id_usuario)
     return render_template("lista_salas.html",salas=salas_disponiveis)
 
 @aluno.route("/participar/<int:id>")
@@ -46,7 +47,9 @@ def sair_da_sala(id_sala):
     sala.participantes.remove(usuario)
     salaDAO.editarSala(sala)
     salas = salaDAO.recupera_salas_usuario(usuario)
-    return render_template("principal_aluno.html",arraySalas=salas)
+    respostaDAO = RespostaDAO()
+    atividades_realizadas = respostaDAO.atividades_realizadas_usuario(id_usuario)
+    return render_template("principal_aluno.html",arraySalas=salas,atividades_realizadas=atividades_realizadas)
 
 @aluno.route("/carregar_sala/<int:id>")
 def carregar_sala(id):
@@ -66,7 +69,11 @@ def carregar_sala(id):
         porcentagem_preencher_imagem = 100
     print("porcentagem_preencher_imagem: "+str(porcentagem_preencher_imagem))
     print("porcentagem_preencher_imagem: "+str(porcentagem_preencher_imagem))
-    return render_template("sala_aluno.html",sala_selecionada=sala_selecionada,pontuacao_aluno=pontuacao_aluno,pontuacao_sala=pontuacao_sala,posicao_no_ranking=posicao_no_ranking,porcentagem_preencher_imagem=porcentagem_preencher_imagem)
+    ranking = salaDAO.gerar_ranking(sala_selecionada.id)
+    ranking = salaDAO.preencher_ranking_nao_respondentes(sala_selecionada.id,aluno_id)
+    lista_pontuacao_aluno = respostaDAO.obter_lista_pontuacao_aluno(sala_selecionada.id,aluno_id)
+    print("Olha aqui: "+str(lista_pontuacao_aluno))
+    return render_template("sala_aluno.html",sala_selecionada=sala_selecionada,pontuacao_aluno=pontuacao_aluno,pontuacao_sala=pontuacao_sala,posicao_no_ranking=posicao_no_ranking,porcentagem_preencher_imagem=porcentagem_preencher_imagem,ranking=ranking,lista_pontuacao_aluno=lista_pontuacao_aluno)
 
 @aluno.route("/resolve_atividade/<int:atividade_id>",methods=['POST'])
 def resolve_atividade(atividade_id):
@@ -99,3 +106,13 @@ def resolve_atividade(atividade_id):
 
 
     return redirect(url_for('aluno.carregar_sala',id=sala_id))
+
+
+@aluno.route("/excluir_resposta/<int:id_sala>/<int:id_resposta>")
+def excluir_resposta(id_sala,id_resposta):
+    print("id_sala:"+str(id_sala))
+    print("id_resposta:"+str(id_resposta))
+    respostaDAO = RespostaDAO()
+    respostaDAO.remove_resposta(id_resposta)
+    
+    return redirect(url_for('aluno.carregar_sala',id=id_sala))
