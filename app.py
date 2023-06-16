@@ -28,6 +28,7 @@ participacoes = db.Table('participacoes',
     #db.Column('participante_id',db.Integer,db.ForeignKey('usuario.id'),primary_key=True),
 )
 
+
 app.register_blueprint(usuarios,url_prefix='/usuarios')
 app.register_blueprint(professor,url_prefix='/professor')
 app.register_blueprint(aluno,url_prefix='/aluno')
@@ -39,6 +40,7 @@ db.init_app(app)
 
 @app.route("/")
 def index():
+    print("teste")
     db.drop_all()
     db.create_all()
     session.clear()
