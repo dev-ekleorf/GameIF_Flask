@@ -40,7 +40,7 @@ db.init_app(app)
 
 @app.route("/")
 def index():
-    print("teste")
+    print("teste bbbb")
     db.drop_all()
     db.create_all()
     session.clear()
