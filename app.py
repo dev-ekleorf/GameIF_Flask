@@ -24,8 +24,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 participacoes = db.Table('participacoes',
-    #db.Column('sala_id',db.Integer,db.ForeignKey('sala.id'),primary_key=True),
-    #db.Column('participante_id',db.Integer,db.ForeignKey('usuario.id'),primary_key=True),
+    db.Column('sala_id',db.Integer,db.ForeignKey('sala.id'),primary_key=True),
+    db.Column('participante_id',db.Integer,db.ForeignKey('usuario.id'),primary_key=True),
 )
 
 
@@ -40,9 +40,8 @@ db.init_app(app)
 
 @app.route("/")
 def index():
-    print("teste bbbb")
-    db.drop_all()
-    db.create_all()
+    #db.drop_all()
+    #db.create_all()
     session.clear()
     messages = get_flashed_messages()  # Obter as flash messages
     return render_template("tela_login.html", messages=messages)

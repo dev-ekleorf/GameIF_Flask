@@ -83,7 +83,7 @@ class SalaDAO:
 
         usuarioDAO = UsuarioDAO()
         usuario = usuarioDAO.recuperaUsuario(id_usuario)
-            
+        flag = ""
         for aluno_info in ranking:
             if aluno_info['aluno_id'] == usuario.id:
                 print("dentro do ranking!")
