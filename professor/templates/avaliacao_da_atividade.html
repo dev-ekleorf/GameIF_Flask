@@ -15,7 +15,7 @@ Avaliar Atividade {{atividade_selecionada.id}}
     {% endif %}
     {% endwith %}
 <div class="container mt-3">
-    <h2>Lista de Respostas da Atividade: {{atividade_selecionada.id}} - {{atividade_selecionada.nome}}</h2>
+    <h2>Lista de Respostas da Atividade: {{atividade_selecionada.nome}}</h2>
     {% if atividade_selecionada.respostas %}
     <table class="table">
         <thead>
@@ -30,14 +30,18 @@ Avaliar Atividade {{atividade_selecionada.id}}
         </thead>
         <tbody>
             {% for resposta in atividade_selecionada.respostas %}
+            {% if resposta.pontuacao_recebida is none %}
+            <tr class="table-danger">
+            {% else %}
             <tr>
+            {% endif %}
                 <th scope="row">{{ resposta.id }}</th>
                 <td>{{ resposta.usuario.nome }}</td>
                 {% if atividade_selecionada.tipo == "envio-arquivo" %}
                     <td><a href="{{ url_for('professor.download_resposta', id_resposta=resposta.id) }}">Download</a></td>
                 {% else %}
                     <td>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalResposta{{ resposta.id }}">
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalResposta{{ resposta.id }}">
                             Visualizar
                         </button>
                     </td>

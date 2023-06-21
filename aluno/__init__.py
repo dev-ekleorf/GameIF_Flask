@@ -59,21 +59,27 @@ def carregar_sala(id):
     pontuacao_sala = sum(atividade.pontuacao for atividade in sala_selecionada.atividades)
     aluno_id = session['usuarioLogado']
     pontuacao_aluno = UsuarioDAO.calcular_pontuacao_total_aluno(aluno_id,sala_selecionada.id)
-    ranking =salaDAO.gerar_ranking(id)
-    posicao_no_ranking = UsuarioDAO.obter_posicao_aluno(ranking,aluno_id)
-    #porcentagem_preencher_imagem = (pontuacao_aluno*100)/pontuacao_sala
+    
     atividades_realizadas = respostaDAO.atividades_realizadas_usuario(aluno_id)
+    print("atividades_realizadas: "+str(atividades_realizadas))
+    print("atividades realizadas na sala: "+str(atividades_realizadas.get(id)))
     try:
-        porcentagem_preencher_imagem = (atividades_realizadas[id]*100)/len(sala_selecionada.atividades)
-    except:
+        if(atividades_realizadas.get(id) is None):
+            porcentagem_preencher_imagem = 0
+        else:
+            porcentagem_preencher_imagem = (atividades_realizadas.get(id)*100)/len(sala_selecionada.atividades)
+        print("deu certo no try")
+    except Exception as erro:
+        print("entrou no except: "+str(erro))
         porcentagem_preencher_imagem = 100
-    print("porcentagem_preencher_imagem: "+str(porcentagem_preencher_imagem))
     print("porcentagem_preencher_imagem: "+str(porcentagem_preencher_imagem))
     ranking = salaDAO.gerar_ranking(sala_selecionada.id)
     ranking = salaDAO.preencher_ranking_nao_respondentes(sala_selecionada.id,aluno_id)
     lista_pontuacao_aluno = respostaDAO.obter_lista_pontuacao_aluno(sala_selecionada.id,aluno_id)
-    print("Olha aqui: "+str(lista_pontuacao_aluno))
-    return render_template("sala_aluno.html",sala_selecionada=sala_selecionada,pontuacao_aluno=pontuacao_aluno,pontuacao_sala=pontuacao_sala,posicao_no_ranking=posicao_no_ranking,porcentagem_preencher_imagem=porcentagem_preencher_imagem,ranking=ranking,lista_pontuacao_aluno=lista_pontuacao_aluno)
+    print("lista_pontuacao_aluno: "+str(lista_pontuacao_aluno))
+    posicao_no_ranking = UsuarioDAO.obter_posicao_aluno(ranking,aluno_id)
+    data_atual = date.today()
+    return render_template("sala_aluno.html",sala_selecionada=sala_selecionada,pontuacao_aluno=pontuacao_aluno,pontuacao_sala=pontuacao_sala,posicao_no_ranking=posicao_no_ranking,porcentagem_preencher_imagem=porcentagem_preencher_imagem,ranking=ranking,lista_pontuacao_aluno=lista_pontuacao_aluno,data_atual=data_atual)
 
 @aluno.route("/resolve_atividade/<int:atividade_id>",methods=['POST'])
 def resolve_atividade(atividade_id):

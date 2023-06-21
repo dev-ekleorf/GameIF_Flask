@@ -46,7 +46,7 @@ class RespostaDAO():
             pontuacao_info = {
                 'atividade_id': atividade_id,
                 'resposta_id': resposta_id,
-                'pontuacao': pontuacao if pontuacao is not None else 0
+                'pontuacao': pontuacao if pontuacao is not None else ""
             }
             lista_pontuacoes.append(pontuacao_info)
 

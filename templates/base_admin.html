@@ -1,0 +1,62 @@
+<!-- base.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- cabecalho padrao -->
+  {% block head %}
+  <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='app.js') }}"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+  <title>
+    {% block title %}{% endblock %} - Admin - GameIF
+  </title>
+
+  {% endblock %}
+
+  {% block styles %}
+  <style>
+      body {
+          background-image: url("{{ url_for('static', filename='background.jpg') }}");
+          background-size: cover;
+      }
+  </style>
+  {% endblock %}
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url_for('usuarios.principal') }}">
+          <img src="{{url_for('logos',nome_arquivo='logo_gameIF.jpeg')}}" class="img-thumbnail"
+            style="max-width: 80px; max-width: 80px;" alt="Logo da Plataforma GameIF.">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav  mr-auto">
+            <a class="nav-link active" aria-current="page" href="/usuarios/principal">Home</a>
+            <a class="nav-link" href="/admin/listar_usuarios">Usuários</a>
+            <a class="nav-link" href="/admin/listar_salas">Salas</a>
+            <a href="/usuarios/logout" class="nav-link text-danger">Logout</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+
+    <div id="content">
+      {% block content %}
+      <!-- conteudo das outras paginas -->
+      {% endblock %}
+    </div>
+
+</body>
+
+</html>

@@ -112,11 +112,6 @@ def adicionarUsuario():
 def tela_cadastro():
     return render_template("tela_cadastro.html")
 
-
-@usuarios.route("/telaAdicionarUsuario")
-def telaAdicionarUsuario():
-    return render_template("adicionarUsuario.html")
-
 @usuarios.route("/excluirUsuario/<int:id>")
 def excluirUsuario(id):
     usuarioDAO = UsuarioDAO()

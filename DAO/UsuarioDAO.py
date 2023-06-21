@@ -63,5 +63,5 @@ class UsuarioDAO:
         for aluno_info in ranking:
             if aluno_info['aluno_id'] == aluno_id:
                 return aluno_info['posicao']
-        return "Fora do Ranking"
+        return ""
 

@@ -27,7 +27,7 @@ Sala {{sala_selecionada.nome}}
             </div>
             <div id="gamificação" class="p-3 mb-4 rounded" style="background-color: #f7f7f7;">
                 <h1 class="page-header">Tenho {{pontuacao_aluno}} pontos de {{pontuacao_sala}} possíveis.</h1>
-                <h1 class="page-header">Sou o {{posicao_no_ranking}}º entre {{sala_selecionada.participantes|count-1}} participantes.</h1>
+                <h1 class="page-header">{% if posicao_no_ranking == "" %} Fora do Ranking {% else %} Sou o {{posicao_no_ranking}}º {% endif %}entre {{sala_selecionada.participantes|count-1}} participantes.</h1>
                 <div class="accordion mt-3 mb-3" id="ranking-accordion">
                   <button class="btn btn-success btn-lg btn-block" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRanking" aria-expanded="false" aria-controls="collapseRanking">
                       Ranking da Sala
@@ -71,6 +71,9 @@ Sala {{sala_selecionada.nome}}
 
 <div class="container mt-2"> 
    <div class="accordion" id="accordionExample">
+    {% if not sala_selecionada.atividades %}
+      <h4>Não há atividades cadastradas.</h4>
+    {% else %}
         {% for tarefa in sala_selecionada.atividades %}
         <div class="accordion-item mt-3">
           <h2 class="accordion-header" id={{tarefa.id}}>
@@ -96,13 +99,19 @@ Sala {{sala_selecionada.nome}}
               <p>Esta tarefa já foi respondida.</p>
               {% for pontuacao in lista_pontuacao_aluno %}
               {% if pontuacao.atividade_id == tarefa.id %}
-                <p>Pontuação recebida: {{ pontuacao.pontuacao}}</p>
+                {% if pontuacao.pontuacao == "" %}
+                  <p>Aguardando Correção.</p>
+                {% else %}
+                  <p>Pontuação recebida: {{ pontuacao.pontuacao}}</p>
+                {% endif%}
+              
                 <div class="mt-auto text-center">
                   <a href="/aluno/excluir_resposta/{{sala_selecionada.id}}/{{pontuacao.resposta_id}}" class="btn btn-danger">Excluir Resposta</a>
                 </div>
               {% endif %}
             {% endfor %}
-              
+            {% elif tarefa.data_final < data_atual and not tarefa.id in atividades_respondidas_ids %}
+            <p>O Prazo para entrega acabou...</p>
               
             {% else %}
               {% if tarefa.tipo == "envio-arquivo" %}
@@ -145,6 +154,7 @@ Sala {{sala_selecionada.nome}}
         </div>
       
       {% endfor %}
+    {% endif %}
     </div>
 </div>
 

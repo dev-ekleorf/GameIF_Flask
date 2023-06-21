@@ -73,7 +73,8 @@ def tela_criar_salas():
 
 @professor.route("/tela_criar_atividade/<int:id_sala>")
 def tela_criar_atividade(id_sala):
-    return render_template("adicionar_atividade.html", id_sala=id_sala)
+    data_min = datetime.date.today().strftime('%Y-%m-%d')
+    return render_template("adicionar_atividade.html", id_sala=id_sala,data_min=data_min)
 
 @professor.route("/adicionar_atividade/<int:id_sala>",methods=['POST'])
 def adicionar_atividade(id_sala):
@@ -167,6 +168,7 @@ def editar_atividade(id_atividade):
     nome=request.form['nome_atividade']
     descricao=request.form['descricao']
     pontuacao=request.form['pontuacao']
+    data_entrega=request.form['data_entrega']
     tipo_atividade=request.form['tipo_atividade']
     print("nome: "+nome)
     print("descricao: "+descricao)
@@ -175,6 +177,7 @@ def editar_atividade(id_atividade):
     
     atividade.nome = nome
     atividade.descricao = descricao
+    atividade.data_final = data_entrega
     atividade.pontuacao = pontuacao
     atividade.tipo = tipo_atividade
 
