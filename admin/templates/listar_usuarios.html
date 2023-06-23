@@ -1,0 +1,69 @@
+{% extends "base_admin.html" %}
+<script src="{{ asset('js/bootstrap-datepicker.min.js')}}"></script>
+{% block title %}
+Cadastro de Usuários
+{% endblock %}
+
+{% block content %}
+
+      
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+        <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+   <div class="container mt-3">
+    <h2>Lista de Usuários</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Avatar</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+    
+            <tr>
+                <th scope="row">{{ usuario.id }}</th>
+                <td>
+                       
+                    <img src="{{url_for('avatar',nome_arquivo=usuario.avatar)}}" class="img-thumbnail"
+                        style="max-width: 80px; max-width: 80px;" alt="...">
+                    
+                </td>
+                <td>{{usuario.nome}}</td>
+                <td>{{usuario.tipo}}</td>
+                <td>
+                    <a class="btn btn-warning text-white" href="/admin/tela_editar_usuario/{{usuario.id}}">Editar</a>
+                    <a class="btn btn-danger" href="/admin/excluir_usuario/{{usuario.id}}">Excluir</a>
+               
+                    
+                </td>
+
+            </tr>
+            
+            {% endfor %}
+        </tbody>
+        
+    </table>
+ 
+    <div class="row mx-5 my-5">
+        <div class="col">
+        </div>
+        <div class="col-auto">
+          <a class="btn btn-success pull-right" href="/admin/tela_adicionar_usuario">Adicionar Usuário</a>
+        </div>
+      </div>
+
+</div>    
+
+{% endblock %}

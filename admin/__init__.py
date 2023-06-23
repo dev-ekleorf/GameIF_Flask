@@ -16,11 +16,19 @@ admin = Blueprint('admin', __name__,
                         template_folder='templates', static_folder='static')
 
 
-@admin.route("/procurar_salas")
-def procurar_salas():
+@admin.route("/listar_salas")
+def listar_salas():
     salaDAO = SalaDAO()
-    salas_disponiveis = salaDAO.listarSalas()
-    return render_template("lista_salas.html",salas=salas_disponiveis)
+    salas = salaDAO.listarSalas()
+    return render_template("listar_salas.html",salas=salas)
+
+@admin.route('/listar_usuarios') 
+def listar_usuarios():
+    try: 
+        usuarios = UsuarioDAO.listarUsuarios()
+        return render_template("listar_usuarios.html",usuarios=usuarios)
+    except Exception as e: 
+        return f"Ocorreu um erro: {e}"
 
 @admin.route('/principal')
 def principal():
@@ -29,6 +37,23 @@ def principal():
     usuario_logado = usuarioDAO.recuperaUsuario(id_usuario)
     salaDAO = SalaDAO()
     arraySalas = salaDAO.recupera_salas_usuario(usuario_logado)
-    salas = salaDAO.recupera_salas_usuario(usuario_logado)
     if(usuario_logado.tipo == "admin"):
         return render_template("principal_admin.html",arraySalas=arraySalas)
+    
+@admin.route("/tela_adicionar_usuario")
+def tela_adicionar_usuario():
+    return render_template("admin_adicionar_usuario.html")
+
+@admin.route("/tela_editar_usuario/<id_usuario>")
+def tela_editar_usuario(id_usuario):
+    usuarioDAO = UsuarioDAO()
+    usuario = usuarioDAO.recuperaUsuario(id_usuario)
+    return render_template("admin_tela_editar_usuario.html",usuario=usuario)
+
+@admin.route("/excluir_usuario/<int:id>")
+def excluir_usuario(id):
+    usuarioDAO = UsuarioDAO()
+    usuarioDAO.removeUsuario(id)
+    return redirect(url_for('admin.listar_usuarios'))
+    
+

@@ -41,8 +41,12 @@ def principal():
 def excluir_sala(id):
     salaDAO = SalaDAO()
     salaDAO.removeSala(id)
-    id_usuario = session['usuarioLogado']
-    return redirect(url_for('usuarios.principal'))
+    usuarioDAO = UsuarioDAO()
+    usuario = usuarioDAO.recuperaUsuario(session['usuarioLogado'])
+    if(usuario.tipo == "admin"):
+        return redirect(url_for('admin.listar_salas'))
+    else:
+        return redirect(url_for('usuarios.principal'))
 
 @professor.route("/criar_sala",methods=['POST'])
 def criar_sala():
@@ -150,7 +154,13 @@ def editar_sala(id_sala):
     sala_recuperada.descricao = request.form['descricao']
     sala_recuperada.logo=enderecoArquivo
     salaDAO.editarSala(sala_recuperada)
-    return redirect(url_for('professor.principal'))
+
+    usuarioDAO = UsuarioDAO()
+    usuario = usuarioDAO.recuperaUsuario(session['usuarioLogado'])
+    if( usuario.tipo == "admin"):
+        return redirect(url_for('admin.listar_salas'))
+    else:
+        return redirect(url_for('professor.principal'))
 
 @professor.route("/tela_editar_atividade/<id_atividade>")
 def tela_editar_atividade(id_atividade):

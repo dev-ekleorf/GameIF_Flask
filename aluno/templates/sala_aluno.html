@@ -49,7 +49,8 @@ Sala {{sala_selecionada.nome}}
                                       <tr>
                                           <th scope="row">{{ posicao_ranking.posicao }}</th>
                                           <td>
-                                              <img src="{{ url_for('avatar', nome_arquivo=posicao_ranking.aluno_avatar) }}" class="img-thumbnail" style="max-width: 80px; max-width: 80px;" alt="Avatar">
+                                            <img src="{{ url_for('avatar', nome_arquivo=posicao_ranking.aluno_avatar) }}" class="img-thumbnail" style="max-width: 80px; max-height: 80px; object-fit: cover; -webkit-clip-path: polygon(0 0, {{ posicao_ranking.porcentagem_avatar }}% 0, {{ posicao_ranking.porcentagem_avatar }}% 100%, 0 100%); clip-path: polygon(0 0, {{ posicao_ranking.porcentagem_avatar }}% 0, {{ posicao_ranking.porcentagem_avatar }}% 100%, 0 100%);" alt="Avatar">
+
                                           </td>
                                           <td>{{ posicao_ranking.aluno_apelido }}</td>
                                           <td>{{ posicao_ranking.pontuacao_total }}</td>
@@ -101,14 +102,16 @@ Sala {{sala_selecionada.nome}}
               {% if pontuacao.atividade_id == tarefa.id %}
                 {% if pontuacao.pontuacao == "" %}
                   <p>Aguardando Correção.</p>
+                  <div class="mt-auto text-center">
+                    <a href="/aluno/excluir_resposta/{{sala_selecionada.id}}/{{pontuacao.resposta_id}}" class="btn btn-danger">Excluir Resposta</a>
+                  </div>
                 {% else %}
                   <p>Pontuação recebida: {{ pontuacao.pontuacao}}</p>
-                {% endif%}
+                
               
-                <div class="mt-auto text-center">
-                  <a href="/aluno/excluir_resposta/{{sala_selecionada.id}}/{{pontuacao.resposta_id}}" class="btn btn-danger">Excluir Resposta</a>
-                </div>
+                
               {% endif %}
+              {% endif%}
             {% endfor %}
             {% elif tarefa.data_final < data_atual and not tarefa.id in atividades_respondidas_ids %}
             <p>O Prazo para entrega acabou...</p>

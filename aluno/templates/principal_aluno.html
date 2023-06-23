@@ -19,6 +19,7 @@ Principal
 
 <div class="container mt-3"> 
     <h2>Minhas Salas</h2>
+    {% if arraySalas %}
     <table class="table">
         <thead>
             <tr>
@@ -48,6 +49,9 @@ Principal
             </tr>
             
             {% endfor %}
+            {% else %}
+            <h2>Você ainda não está em nenhuma sala.</h2>
+            {% endif %}
         </tbody>
         
     </table>

@@ -1,0 +1,67 @@
+{% extends "base_admin.html" %}
+<script src="{{ asset('js/bootstrap-datepicker.min.js')}}"></script>
+{% block title %}
+Cadastro de Usuários
+{% endblock %}
+
+{% block content %}
+
+      
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+        <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+   
+    
+<div class="container mt-3">
+    <h2>Lista de Salas</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Logo</th>
+                <th scope="col">Nome da Imagem</th>
+                <th scope="col">Nome Sala</th>
+                <th scope="col">Descrição</th>
+                <th scope="col">Professo Responsável</th>
+                <th scope="col">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sala in salas %}
+    
+            <tr>
+                <th scope="row">{{ sala.id }}</th>
+                <td>
+                       
+                    <img src="{{url_for('logos',nome_arquivo=sala.logo)}}" class="img-thumbnail"
+                        style="max-width: 80px; max-width: 80px;" alt="...">
+                    
+                </td>
+                <td>{{sala.logo}}</td>
+                <td>{{sala.nome}}</td>
+                <td>{{sala.descricao}}</td>
+                <td>{{sala.getProfessor().id}} - {{sala.getProfessor().nome}}</td>
+
+                <td>
+                    <a class="btn btn-warning text-white" href="/professor/tela_editar_sala/{{sala.id}}">Editar</a>
+                    <a class="btn btn-danger" href="/professor/excluir_sala/{{sala.id}}">Excluir</a>
+                </td>
+
+            </tr>
+            
+            {% endfor %}
+        </tbody>
+        
+    </table>
+ 
+
+</div>      
+
+{% endblock %}

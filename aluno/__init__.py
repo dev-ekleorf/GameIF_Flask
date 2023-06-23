@@ -63,23 +63,43 @@ def carregar_sala(id):
     atividades_realizadas = respostaDAO.atividades_realizadas_usuario(aluno_id)
     print("atividades_realizadas: "+str(atividades_realizadas))
     print("atividades realizadas na sala: "+str(atividades_realizadas.get(id)))
-    try:
-        if(atividades_realizadas.get(id) is None):
-            porcentagem_preencher_imagem = 0
-        else:
-            porcentagem_preencher_imagem = (atividades_realizadas.get(id)*100)/len(sala_selecionada.atividades)
-        print("deu certo no try")
-    except Exception as erro:
-        print("entrou no except: "+str(erro))
-        porcentagem_preencher_imagem = 100
+    porcentagem_preencher_imagem = calcula_porcentagem_preencher_imagem(atividades_realizadas,sala_selecionada,id)
+
     print("porcentagem_preencher_imagem: "+str(porcentagem_preencher_imagem))
     ranking = salaDAO.gerar_ranking(sala_selecionada.id)
     ranking = salaDAO.preencher_ranking_nao_respondentes(sala_selecionada.id,aluno_id)
+    ranking = popula_ranking_com_preencher_imagem(ranking,sala_selecionada.id)
+    print("Ranking com porcentagem de sala: "+str(ranking))
     lista_pontuacao_aluno = respostaDAO.obter_lista_pontuacao_aluno(sala_selecionada.id,aluno_id)
     print("lista_pontuacao_aluno: "+str(lista_pontuacao_aluno))
     posicao_no_ranking = UsuarioDAO.obter_posicao_aluno(ranking,aluno_id)
     data_atual = date.today()
     return render_template("sala_aluno.html",sala_selecionada=sala_selecionada,pontuacao_aluno=pontuacao_aluno,pontuacao_sala=pontuacao_sala,posicao_no_ranking=posicao_no_ranking,porcentagem_preencher_imagem=porcentagem_preencher_imagem,ranking=ranking,lista_pontuacao_aluno=lista_pontuacao_aluno,data_atual=data_atual)
+
+def popula_ranking_com_preencher_imagem(ranking,sala_id):
+    respostaDAO = RespostaDAO()
+    salaDAO = SalaDAO()
+    sala_selecionada = salaDAO.recuperaSala(sala_id)
+    for posicao in ranking:
+        print("aqui: "+str(posicao))
+        atividades_realizadas = respostaDAO.atividades_realizadas_usuario(posicao['aluno_id'])
+        posicao['porcentagem_avatar']=calcula_porcentagem_preencher_imagem(atividades_realizadas,sala_selecionada,sala_selecionada.id)
+        print("posicao['porcentagem_avatar']? "+str(posicao['porcentagem_avatar']))
+    return ranking
+
+def calcula_porcentagem_preencher_imagem(atividades_realizadas,sala_selecionada,id):
+    try:
+        if(atividades_realizadas.get(id) is None):
+            print("Nenhuma atividade Realizada.")
+            porcentagem_preencher_imagem = 0
+        else:
+            porcentagem_preencher_imagem = (atividades_realizadas.get(id)*100)/len(sala_selecionada.atividades)
+        print("deu certo no try")
+        return porcentagem_preencher_imagem
+    except Exception as erro:
+        print("entrou no except: "+str(erro))
+        porcentagem_preencher_imagem = 100
+        return porcentagem_preencher_imagem
 
 @aluno.route("/resolve_atividade/<int:atividade_id>",methods=['POST'])
 def resolve_atividade(atividade_id):

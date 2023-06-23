@@ -52,77 +52,67 @@ def principal():
         return render_template("principal_aluno.html",arraySalas=arraySalas,atividades_realizadas=atividades_realizadas)
     elif(usuario_logado.tipo == "admin"):
         usuarios = UsuarioDAO.listarUsuarios()
-        return render_template("principal_administrador.html",usuarios=usuarios)
-
-@usuarios.route('/listar_usuarios') 
-def listar_usuarios():
-    try: 
-        usuarios = UsuarioDAO.listarUsuarios()
-        return render_template("principal_administrador.html",usuarios=usuarios)
-    except Exception as e: 
-        return f"Ocorreu um erro: {e}"
-
+        return redirect(url_for('admin.listar_usuarios',usuarios=usuarios))
 
 @usuarios.route("/adicionar_usuario",methods=['POST'])
 def adicionarUsuario():
-    
-    usuario = request.form['nome']
-    apelido = request.form['apelido']
-    senha = request.form['senha']
-    confirme_senha = request.form['confirme-senha']
-    email = request.form['email']
-    avatar = request.files['avatar_usuario']
-    tipo_usuario = request.form['tipo-usuario']
+    try:
+        usuario = request.form['nome']
+        apelido = request.form['apelido']
+        senha = request.form['senha']
+        confirme_senha = request.form['confirme-senha']
+        email = request.form['email']
+        avatar = request.files['avatar_usuario']
+        tipo_usuario = request.form['tipo-usuario']
 
-    if(avatar.filename == ""):
-        dataSave = ""
-        endereco_arquivo="avatar.jpg"
-    else:    
-        dataSave = datetime.datetime.now().strftime('%d%m%Y%H%M%S')
-        print(dataSave)
-        avatar.save(f'avatar/{dataSave}_{avatar.filename}')
-        endereco_arquivo = dataSave+'_'+avatar.filename
+        if(avatar.filename == ""):
+            dataSave = ""
+            endereco_arquivo="avatar.jpg"
+        else:    
+            dataSave = datetime.datetime.now().strftime('%d%m%Y%H%M%S')
+            print(dataSave)
+            avatar.save(f'avatar/{dataSave}_{avatar.filename}')
+            endereco_arquivo = dataSave+'_'+avatar.filename
 
-    print("usuario: "+usuario)
-    print("apelido: "+apelido)
-    print("senha: "+senha)
-    print("confirme-senha: "+confirme_senha)
-    print("email: "+email)
-    print("tipo_usuario: "+tipo_usuario)
-    print("avatar: "+endereco_arquivo)
+        print("usuario: "+usuario)
+        print("apelido: "+apelido)
+        print("senha: "+senha)
+        print("confirme-senha: "+confirme_senha)
+        print("email: "+email)
+        print("tipo_usuario: "+tipo_usuario)
+        print("avatar: "+endereco_arquivo)
 
-    if(senha != confirme_senha):
-        print("Senhas não conferem durante a criação do usuário.")
-        flash('Falha na confirmação de senha, durante a criação do usuário.', 'error')
-        return redirect(url_for('usuarios.tela_cadastro'))
-    else:
-        senha = str(bcrypt.generate_password_hash(senha).decode('utf-8'))
+        if(senha != confirme_senha):
+            print("Senhas não conferem durante a criação do usuário.")
+            flash('Falha na confirmação de senha, durante a criação do usuário.', 'error')
+            return redirect(url_for('usuarios.tela_cadastro'))
+        else:
+            senha = str(bcrypt.generate_password_hash(senha).decode('utf-8'))
 
-    user = Usuario(nome=usuario,apelido=apelido,senha=senha,email=email,tipo=tipo_usuario,avatar=endereco_arquivo)
+        user = Usuario(nome=usuario,apelido=apelido,senha=senha,email=email,tipo=tipo_usuario,avatar=endereco_arquivo)
 
-    usuarioDAO = UsuarioDAO()        
-    usuarioDAO.adicionaUsuario(user)
-    print("session: "+str(session))
-    if('tipo_usuario' in session):
-        if(session['tipo_usuario'] == "admin"):
-            return redirect(url_for('usuarios.principal'))
-    return redirect("/")
-
+        usuarioDAO = UsuarioDAO()        
+        usuarioDAO.adicionaUsuario(user)
+        print("session: "+str(session))
+        if('tipo_usuario' in session):
+            if(session['tipo_usuario'] == "admin"):
+                return redirect(url_for('admin.listar_usuarios'))
+        flash('Usuário Criado com sucesso!', 'success')
+        return redirect("/")
+    except Exception as e:
+        flash('Falha durante a criação do usuário.', 'error')
+        return redirect("/")
 @usuarios.route("/tela_cadastro")
 def tela_cadastro():
     return render_template("tela_cadastro.html")
-
-@usuarios.route("/excluirUsuario/<int:id>")
-def excluirUsuario(id):
-    usuarioDAO = UsuarioDAO()
-    usuarioDAO.removeUsuario(id)
-    return redirect(url_for('usuarios.listar_usuarios'))
 
 @usuarios.route("/tela_editar_usuario/<int:id>")
 def tela_editar_usuario(id):
     print("tela_editar_usuario: Id: "+str(id))
     usuarioDAO = UsuarioDAO()
     usuarioRecuperado = usuarioDAO.recuperaUsuario(id)
+
+    
     return render_template("editarUsuario.html",usuario=usuarioRecuperado)
 
 @usuarios.route("/editar_usuario/<int:id>",methods=['POST'])
@@ -163,8 +153,11 @@ def editar_usuario(id):
 
     usuarioDAO.editarUsuario(usuario)
 
-   
-    return redirect(url_for('usuarios.meu_perfil'))
+    usuario_logado = usuarioDAO.recuperaUsuario(session['usuarioLogado'])
+    if(usuario_logado.tipo == "admin"):
+        return redirect(url_for('admin.listar_usuarios'))
+    else:
+        return redirect(url_for('usuarios.meu_perfil'))
    
 
 

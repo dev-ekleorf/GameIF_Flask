@@ -27,3 +27,10 @@ class Sala(db.Model):
     def getParticipantes(self):
         return self.__participantes
     
+
+    def getProfessor(self):
+        for participante in self.participantes:
+            if participante.tipo == "professor":
+                return participante
+        return ""
+    
